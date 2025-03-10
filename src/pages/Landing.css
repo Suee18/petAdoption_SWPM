@@ -1,0 +1,77 @@
+/* src/pages/Landing.css */
+.landing-container {
+    width: 100%;
+    overflow-x: hidden;
+  }
+  
+  /* Part 1: Animation Section */
+  .animation-section {
+    width: 100vw;
+    height: 100vh; /* Full viewport height */
+    position: relative;
+    background-color: #ecfeff; /* Light background color */
+  }
+  
+  .animation-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* This is just a placeholder for your animation */
+  .animation-placeholder {
+    text-align: center;
+    font-size: 2rem;
+    color: #888;
+    border: 2px dashed #ccc;
+    padding: 2rem;
+    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+  
+  
+  
+  /* Part 2: Mission and CTA Section */
+  .mission-cta-section {
+    width: 100%;
+    background-color: #14213d; /* Dark blue background */
+    padding: 5rem 0;
+    color: white;
+  }
+  
+ 
+  
+  
+  /* Media Queries for Responsiveness */
+  @media (max-width: 768px) {
+    .mission-statement h2 {
+      font-size: 2rem;
+    }
+    
+    .cta-buttons {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .cta-button {
+      width: 100%;
+      max-width: 300px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .mission-statement h2 {
+      font-size: 1.8rem;
+    }
+    
+    .mission-statement p {
+      font-size: 1rem;
+    }
+    
+    .cta-button {
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+    }
+  }

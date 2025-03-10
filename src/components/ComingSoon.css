@@ -1,0 +1,167 @@
+/* src/styles/ComingSoon.css */
+
+.coming-soon-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .coming-soon-title {
+    font-size: 2.5rem;
+    color: #14213d;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  
+  .coming-soon-title::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: linear-gradient(to right, #c8922a, #e2b353);
+  }
+  
+  .coming-soon-message {
+    font-size: 1.2rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 2rem;
+  }
+  
+  .coming-soon-emoji {
+    font-size: 4rem;
+    margin-bottom: 2rem;
+  }
+  
+  .coming-soon-timer {
+    display: flex;
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+  
+  .timer-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .timer-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #14213d;
+  }
+  
+  .timer-label {
+    font-size: 0.9rem;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  .notify-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 500px;
+    margin-top: 2rem;
+  }
+  
+  .notify-input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+  
+  .notify-button {
+    padding: 0.8rem 2rem;
+    background-color: #14213d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .notify-button:hover {
+    background-color: #0f1a2f;
+  }
+  
+  .coming-soon-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  .coming-soon-social {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #14213d;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  
+  .social-icon:hover {
+    background-color: #14213d;
+    color: white;
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .coming-soon-title {
+      font-size: 2rem;
+    }
+    
+    .coming-soon-timer {
+      gap: 1rem;
+    }
+    
+    .timer-number {
+      font-size: 2rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .coming-soon-title {
+      font-size: 1.8rem;
+    }
+    
+    .coming-soon-message {
+      font-size: 1rem;
+    }
+    
+    .coming-soon-timer {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+  }
