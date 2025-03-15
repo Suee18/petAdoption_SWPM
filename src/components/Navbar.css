@@ -44,6 +44,7 @@
 
 .navbar-logo:hover {
   transform: scale(1.05);
+  color:#3d1170;
 }
 
 .nav-menu {
