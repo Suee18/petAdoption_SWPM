@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import LoggedInNavbar from './components/LoggedInNavbar';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
+import SignUp from './pages/signUp';
 import AvailablePets from './pages/AvailablePets';
 import Profile from './pages/Profile';
 import Inbox from './pages/Inbox';
@@ -60,7 +61,8 @@ function AppContent() {
           />
           <Route path="/register-shelter" element={<AuthRoute element={<RegisterShelter />} requiresAuth={false} />} />
           
-          <Route path="/available-pets" element={<AuthRoute element={<AvailablePets />} requiresAuth={true} />} />
+          <Route path="/available-pets" element={<AuthRoute element={<AvailablePets />} requiresAuth={false} />} />
+          <Route path="/signUp" element={<AuthRoute element={<SignUp />} requiresAuth={false} />} />
           <Route path="/profile" element={<AuthRoute element={<Profile />} requiresAuth={true} />} />
           <Route path="/inbox" element={<AuthRoute element={<Inbox />} requiresAuth={true} />} />
           <Route path="/logout" element={<LogoutComponent />} />

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap is included
-import './Pages.css'; // Make sure your custom styles don't interfere
-import dogImage from '../assets/images/dog-please-adopt-me-fb.jpg'; // Import the image
+import { Link } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './Pages.css';
+import dogImage from '../assets/images/dog-please-adopt-me-fb.jpg';
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -73,6 +74,11 @@ export default function Login() {
                     Login
                   </button>
                 </form>
+                <div className="text-center mt-4">
+                  <p className="mb-0">
+                    Don't have an account? <Link to="/signup" className="fw-semibold text-decoration-none">Sign up</Link>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
