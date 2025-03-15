@@ -78,11 +78,7 @@ const Landing = () => {
         description: "Discover pets available for adoption with advanced filtering options",
         icon: petsearchicon
       },
-      {
-        title: "Contact Shelters Directly",
-        description: "Connect with shelters to learn more about pets you're interested in",
-        icon: chat
-      },
+      
       {
         title: "Request Adoption",
         description: "Simple click to request adoption for your selected pet",
@@ -108,7 +104,7 @@ const Landing = () => {
       {
         title: "Pets display",
         description: "Create detailed profiles for pets available for adoption",
-        icon: pets
+        icon: petid
       },
       {
         title: "Requests Management",
@@ -372,51 +368,103 @@ const Landing = () => {
           </motion.div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      <section className="cta-section">
-        <motion.div
-          className="cta-content"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
+    
+        
+      {/* CTA Section with Enhanced Buttons */}
+<section className="cta-section">
+  <motion.div
+    className="cta-content"
+    initial={{ opacity: 0 }}
+    whileInView={{ opacity: 1 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.8 }}
+  >
+    <h2>Ready to make a difference?</h2>
+    <p>Whether you're looking to adopt or you represent a shelter, we're here to help.</p>
+    
+    <div className="cta-buttons">
+      <motion.button
+        className="cta-button primary"
+        whileHover="hover"
+        whileTap="tap"
+        variants={{
+          hover: {
+            scale: 1.03,
+            boxShadow: "0 6px 20px rgba(108, 95, 141, 0.4)"
+          },
+          tap: { scale: 0.97 }
+        }}
+      >
+        <motion.span 
+          className="button-text"
+          variants={{
+            hover: {
+              y: [-1, -4, -1],
+              transition: { 
+                duration: 0.6, 
+                ease: "easeInOut",
+                repeat: Infinity,
+                repeatType: "reverse"
+              }
+            }
+          }}
         >
-          <h2>Ready to Make a Difference?</h2>
-          <p>Whether you're looking to adopt or you represent a shelter, we're here to help.</p>
-
-          <div className="cta-buttons">
-            <motion.button
-              className="cta-button primary"
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0 0 20px 0 rgba(255,255,255,0.3)"
-              }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Adopt a Pet
-            </motion.button>
-
-            <motion.button
-              className="cta-button secondary"
-              whileHover={{
-                scale: 1.05,
-                boxShadow: "0 0 20px 0 rgba(255,255,255,0.3)"
-              }}
-              whileTap={{ scale: 0.95 }}
-            >
-              Add Your Shelter
-            </motion.button>
-          </div>
-        </motion.div>
-      </section>
+          Adopt a Pet
+        </motion.span>
+        <motion.span 
+          className="button-highlight"
+          variants={{
+            hover: {
+              width: "95%",
+              transition: { duration: 0.4 }
+            }
+          }}
+        />
+      </motion.button>
+      
+      <motion.button
+        className="cta-button secondary"
+        whileHover="hover"
+        whileTap="tap"
+        variants={{
+          hover: {
+            scale: 1.03
+          },
+          tap: { scale: 0.97 }
+        }}
+      >
+        <motion.span 
+          className="button-text"
+          variants={{
+            hover: {
+              letterSpacing: "0.1em",
+              transition: { duration: 0.3 }
+            }
+          }}
+        >
+          Add Your Shelter
+        </motion.span>
+        <motion.span 
+          className="button-border"
+          variants={{
+            hover: {
+              opacity: 1,
+              pathLength: 1,
+              transition: { duration: 0.8, ease: "easeInOut" }
+            }
+          }}
+        />
+      </motion.button>
+    </div>
+  </motion.div>
+</section>
 
       {/* Footer */}
       <footer className="footer">
         <div className="footer-content">
           <div className="footer-section">
             <h4>About Us</h4>
-            <p>Dedicated to connecting pets with loving homes since 2023.</p>
+            <p>Dedicated to connecting pets with loving homes since 2025.</p>
           </div>
           <div className="footer-section">
             <h4>Contact</h4>
