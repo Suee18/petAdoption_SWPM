@@ -15,7 +15,7 @@ import NotFound from './pages/NotFound';
 import './App.css';
 
 // Wrapper to decide which component to render based on authentication and user role
-const AuthRoute = ({ element: Element, requiresAuth, requiresShelterRole }) => {
+const AuthRoute = ({ element, requiresAuth, requiresShelterRole }) => {
   const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
   const userRole = localStorage.getItem('userRole');
   
@@ -31,10 +31,10 @@ const AuthRoute = ({ element: Element, requiresAuth, requiresShelterRole }) => {
     }
     
     // User is authenticated and has required role
-    return Element;
+    return element;
   } else {
     // Page doesn't require authentication
-    return Element;
+    return element;
   }
 };
 

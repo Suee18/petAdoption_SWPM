@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { motion } from 'framer-motion';
 import './Pages.css';
 import dogImage from '../assets/images/dog-please-adopt-me-fb.jpg';
 
@@ -61,76 +61,114 @@ export default function Login({ onLogin }) {
     }, 1000);
   };
 
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 300, damping: 24 }
+    }
+  };
+
   return (
-    <section className="h-100 h-custom" style={{ backgroundColor: "#8fc4b7" }}>
-      <div className="container py-5 h-100">
-        <div className="row d-flex justify-content-center align-items-center h-100">
-          <div className="col-lg-8 col-xl-6">
-            <div className="card rounded-3">
-              {/* Image */}
-              <img
-                src={dogImage}
-                className="w-100"
-                style={{
-                  borderTopLeftRadius: ".3rem",
-                  borderTopRightRadius: ".3rem",
-                }}
-                alt="Please Adopt Me!"
-              />
-              <div className="card-body p-4 p-md-5">
-                <h3 className="mb-4 pb-2 pb-md-0 mb-md-5 px-md-2">Login</h3>
-
-                <form className="px-md-2" onSubmit={handleSubmit}>
-                  {/* Username Input */}
-                  <div className="form-outline mb-4">
-                    <input
-                      type="text"
-                      id="username"
-                      className="form-control"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                      required
-                    />
-                    <label className="form-label" htmlFor="username">
-                      Username
-                    </label>
-                  </div>
-
-                  {/* Password Input */}
-                  <div className="form-outline mb-4">
-                    <input
-                      type="password"
-                      id="password"
-                      className="form-control"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                    <label className="form-label" htmlFor="password">
-                      Password
-                    </label>
-                  </div>
-
-                  {/* Login Button */}
-                  <button
-                    type="submit"
-                    data-mdb-button-init
-                    data-mdb-ripple-init
-                    className="btn btn-success btn-lg mb-1"
-                  >
-                    Login
-                  </button>
-                </form>
-                <div className="text-center mt-4">
-                  <p className="mb-0">
-                    Don't have an account? <Link to="/signup" className="fw-semibold text-decoration-none">Sign up</Link>
-                  </p>
-                </div>
-              </div>
-            </div>
+    <div className="auth-page">
+      <motion.div 
+        className="auth-container"
+        initial="hidden"
+        animate="visible"
+        variants={containerVariants}
+      >
+        <motion.div className="auth-card" variants={itemVariants}>
+          <div className="auth-image-container">
+            <img
+              src={dogImage}
+              className="auth-image"
+              alt="A cute dog waiting to be adopted"
+            />
+            <div className="auth-image-overlay"></div>
           </div>
-        </div>
-      </div>
-    </section>
+          
+          <div className="auth-content">
+            <motion.h2 
+              className="auth-title"
+              variants={itemVariants}
+            >
+              Welcome Back
+            </motion.h2>
+            
+            {error && (
+              <motion.div 
+                className="auth-error"
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+              >
+                {error}
+              </motion.div>
+            )}
+            
+            <motion.form 
+              className="auth-form"
+              onSubmit={handleSubmit}
+              variants={itemVariants}
+            >
+              <div className="form-group">
+                <label htmlFor="username">Username</label>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  placeholder="Enter your username"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="Enter your password"
+                />
+              </div>
+
+              <motion.button 
+                className="auth-button"
+                type="submit"
+                disabled={loading}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                {loading ? 'Logging in...' : 'Login'}
+              </motion.button>
+            </motion.form>
+            
+            <motion.div 
+              className="auth-links"
+              variants={itemVariants}
+            >
+              <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
+            </motion.div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </div>
   );
 }

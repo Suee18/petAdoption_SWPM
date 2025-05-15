@@ -394,6 +394,7 @@ const Landing = () => {
           },
           tap: { scale: 0.97 }
         }}
+        onClick={() => window.location.href = '/available-pets'}
       >
         <motion.span 
           className="button-text"
@@ -432,6 +433,7 @@ const Landing = () => {
           },
           tap: { scale: 0.97 }
         }}
+        onClick={() => window.location.href = '/register-shelter'}
       >
         <motion.span 
           className="button-text"
