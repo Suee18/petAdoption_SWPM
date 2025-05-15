@@ -1,0 +1,427 @@
+/* 
+ * RegisterShelter.css - Pet Adoption Platform
+ * Matches the design system of Landing.css
+ */
+
+.register-shelter-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+  background-color: var(--color-gray-50);
+  background-image: linear-gradient(
+    to bottom,
+    var(--color-gray-50) 0%,
+    var(--color-primary-bg) 100%
+  );
+}
+
+.register-shelter-container {
+  width: 100%;
+  max-width: 900px;
+  background-color: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.register-title {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-3xl);
+  margin-bottom: 0.75rem;
+  background: linear-gradient(45deg, var(--color-primary), var(--color-secondary-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+
+.register-description {
+  text-align: center;
+  color: var(--color-gray-600);
+  max-width: 600px;
+  margin: 0 auto 2.5rem;
+  font-size: var(--font-size-lg);
+}
+
+/* Progress Bar Styles */
+.progress-container {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 3rem;
+  padding: 0 2rem;
+}
+
+.progress-line {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  height: 4px;
+  width: 100%;
+  background-color: var(--color-gray-200);
+  z-index: 1;
+}
+
+.progress-line-fill {
+  height: 100%;
+  background-color: var(--color-primary);
+  transition: width 0.5s ease;
+  border-radius: var(--radius-full);
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.step-number {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  margin-bottom: 0.5rem;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.progress-step.active .step-number {
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 0 0 4px rgba(108, 95, 141, 0.2);
+}
+
+.step-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  transition: all 0.3s ease;
+}
+
+.progress-step.active .step-label {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Form Styles */
+.register-form {
+  position: relative;
+}
+
+.form-step {
+  margin-bottom: 2rem;
+}
+
+.form-step h2 {
+  font-family: var(--font-secondary);
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.form-row .form-group {
+  flex: 1;
+  min-width: 200px;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="file"],
+textarea,
+select.select-input {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  font-family: var(--font-primary);
+  font-size: var(--font-size-base);
+  background-color: var(--color-white);
+  transition: all 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="file"]:focus,
+textarea:focus,
+select.select-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(108, 95, 141, 0.25);
+  outline: none;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Checkbox Styles */
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+  margin-right: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.checkbox-container input[type="checkbox"] {
+  opacity: 0;
+  position: absolute;
+  cursor: pointer;
+}
+
+.checkbox-label {
+  padding-left: 30px;
+  position: relative;
+  display: inline-block;
+  line-height: 20px;
+  color: var(--color-gray-700);
+}
+
+.checkbox-label::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-gray-400);
+  background-color: white;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.checkbox-container input:checked + .checkbox-label::before {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.checkbox-label::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  display: none;
+  transition: all 0.2s ease;
+}
+
+.checkbox-container input:checked + .checkbox-label::after {
+  display: block;
+}
+
+/* Review Section Styles */
+.review-section {
+  background-color: var(--color-gray-50);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  margin-bottom: 2rem;
+}
+
+.review-section h3 {
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.review-item {
+  display: flex;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px dashed var(--color-gray-200);
+}
+
+.review-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.review-label {
+  width: 120px;
+  min-width: 120px;
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-600);
+}
+
+.review-value {
+  font-weight: var(--font-weight-normal);
+  color: var(--color-gray-800);
+}
+
+.review-image {
+  margin-top: 0.5rem;
+}
+
+.review-image img {
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-gray-200);
+}
+
+/* Form Navigation Buttons */
+.form-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 2.5rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  position: relative;
+  min-width: 120px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 4px 6px rgba(108, 95, 141, 0.2);
+}
+
+.btn-secondary {
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-700);
+}
+
+.btn-primary:disabled {
+  background-color: var(--color-gray-400);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.btn-primary:disabled:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.submit-btn {
+  background: linear-gradient(45deg, var(--color-primary), var(--color-secondary-dark));
+  min-width: 180px;
+}
+
+/* Decorative Elements */
+.register-shelter-decoration {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0.05;
+}
+
+.paw-print {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background-image: url('../media/LandingPage/paw.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.8;
+}
+
+.paw-print-1 {
+  top: 50px;
+  right: 50px;
+  transform: rotate(45deg);
+}
+
+.paw-print-2 {
+  bottom: 80px;
+  left: 70px;
+  transform: rotate(-20deg);
+}
+
+.paw-print-3 {
+  bottom: 30%;
+  right: 15%;
+  transform: rotate(15deg);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .register-shelter-container {
+    padding: 1.5rem;
+  }
+
+  .register-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .progress-container {
+    padding: 0;
+  }
+
+  .step-label {
+    display: none;
+  }
+
+  .form-navigation {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}
