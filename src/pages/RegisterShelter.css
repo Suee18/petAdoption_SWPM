@@ -185,6 +185,35 @@ select.select-input:focus {
   outline: none;
 }
 
+/* Form Validation Styles */
+.input-error {
+  border-color: var(--color-error) !important;
+  background-color: rgba(229, 127, 146, 0.05);
+}
+
+.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(229, 127, 146, 0.25) !important;
+}
+
+.error-message {
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  margin-top: 0.25rem;
+  font-weight: var(--font-weight-medium);
+}
+
+.checkbox-group-error {
+  border: 1px dashed var(--color-error);
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  background-color: rgba(229, 127, 146, 0.05);
+}
+
+.checkbox-container-error .checkbox-label::before {
+  border-color: var(--color-error);
+  background-color: rgba(229, 127, 146, 0.1);
+}
+
 textarea {
   resize: vertical;
   min-height: 120px;

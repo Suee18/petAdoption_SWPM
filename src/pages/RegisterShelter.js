@@ -35,6 +35,7 @@ const RegisterShelter = () => {
     acceptTerms: false
   });
 
+  const [errors, setErrors] = useState({});
   const [currentStep, setCurrentStep] = useState(1);
   const totalSteps = 3;
 
@@ -70,19 +71,140 @@ const RegisterShelter = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // In a real application, you would submit the form data to your backend
-    console.log("Form submitted:", formData);
-    alert("Thank you for registering your shelter!");
-    // Reset form or redirect user
+    
+    // Final validation of all steps before submission
+    const isStep1Valid = validateStep(1);
+    const isStep2Valid = validateStep(2);
+    const isStep3Valid = validateStep(3);
+    
+    if (isStep1Valid && isStep2Valid && isStep3Valid) {
+      // In a real application, you would submit the form data to your backend
+      console.log("Form submitted:", formData);
+      alert("Thank you for registering your shelter!");
+      // Reset form or redirect user
+    } else {
+      // If there are errors in a specific step, go to that step
+      if (!isStep1Valid) {
+        setCurrentStep(1);
+      } else if (!isStep2Valid) {
+        setCurrentStep(2);
+      }
+      // Step 3 errors will be visible as user is already on step 3 during submission
+    }
+  };
+
+  const validateStep = (step) => {
+    const newErrors = {};
+    let isValid = true;
+    
+    if (step === 1) {
+      // Validate username
+      if (!formData.username.trim()) {
+        newErrors.username = "Username is required";
+        isValid = false;
+      } else if (formData.username.length < 4) {
+        newErrors.username = "Username must be at least 4 characters";
+        isValid = false;
+      }
+      
+      // Validate email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!formData.email.trim()) {
+        newErrors.email = "Email is required";
+        isValid = false;
+      } else if (!emailRegex.test(formData.email)) {
+        newErrors.email = "Email format is invalid";
+        isValid = false;
+      }
+      
+      // Validate password
+      if (!formData.password) {
+        newErrors.password = "Password is required";
+        isValid = false;
+      } else if (formData.password.length < 8) {
+        newErrors.password = "Password must be at least 8 characters";
+        isValid = false;
+      }
+      
+      // Validate confirm password
+      if (formData.password !== formData.confirmPassword) {
+        newErrors.confirmPassword = "Passwords do not match";
+        isValid = false;
+      }
+    }
+    
+    if (step === 2) {
+      // Validate shelter name
+      if (!formData.shelterName.trim()) {
+        newErrors.shelterName = "Shelter name is required";
+        isValid = false;
+      }
+      
+      // Validate phone (optional but if provided, validate format)
+      if (formData.phone && !/^[0-9+\-\s()]{7,20}$/.test(formData.phone)) {
+        newErrors.phone = "Please enter a valid phone number";
+        isValid = false;
+      }
+      
+      // Validate address
+      if (!formData.address.trim()) {
+        newErrors.address = "Address is required";
+        isValid = false;
+      }
+      
+      // Validate city
+      if (!formData.city) {
+        newErrors.city = "City is required";
+        isValid = false;
+      }
+      
+      // Validate state
+      if (!formData.state) {
+        newErrors.state = "Governorate is required";
+        isValid = false;
+      }
+      
+      // Validate zipCode
+      if (!formData.zipCode.trim()) {
+        newErrors.zipCode = "Postal code is required";
+        isValid = false;
+      } else if (!/^[0-9]{5,10}$/.test(formData.zipCode)) {
+        newErrors.zipCode = "Please enter a valid postal code";
+        isValid = false;
+      }
+      
+      // Validate pet types (at least one should be selected)
+      const hasPetType = Object.values(formData.petTypes).some(value => value);
+      if (!hasPetType) {
+        newErrors.petTypes = "Please select at least one pet type";
+        isValid = false;
+      }
+    }
+    
+    if (step === 3) {
+      // Validate terms acceptance
+      if (!formData.acceptTerms) {
+        newErrors.acceptTerms = "You must accept the terms to register";
+        isValid = false;
+      }
+    }
+    
+    setErrors(newErrors);
+    return isValid;
   };
 
   const nextStep = () => {
-    // Add validation here before proceeding to next step
-    setCurrentStep(currentStep < totalSteps ? currentStep + 1 : currentStep);
+    if (validateStep(currentStep)) {
+      setCurrentStep(currentStep < totalSteps ? currentStep + 1 : currentStep);
+      // Clear any previous errors when moving to next step
+      setErrors({});
+    }
   };
 
   const prevStep = () => {
     setCurrentStep(currentStep > 1 ? currentStep - 1 : currentStep);
+    // Clear errors when going back
+    setErrors({});
   };
 
   const containerVariants = {
@@ -177,9 +299,11 @@ const RegisterShelter = () => {
                   name="username"
                   value={formData.username}
                   onChange={handleInputChange}
+                  className={errors.username ? 'input-error' : ''}
                   required
                   placeholder="Choose a username for your shelter account"
                 />
+                {errors.username && <div className="error-message">{errors.username}</div>}
               </div>
               
               <div className="form-group">
@@ -190,9 +314,11 @@ const RegisterShelter = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
+                  className={errors.email ? 'input-error' : ''}
                   required
                   placeholder="Enter your shelter's contact email"
                 />
+                {errors.email && <div className="error-message">{errors.email}</div>}
               </div>
               
               <div className="form-row">
@@ -204,9 +330,11 @@ const RegisterShelter = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleInputChange}
+                    className={errors.password ? 'input-error' : ''}
                     required
                     placeholder="Create a secure password"
                   />
+                  {errors.password && <div className="error-message">{errors.password}</div>}
                 </div>
                 
                 <div className="form-group">
@@ -217,9 +345,11 @@ const RegisterShelter = () => {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
+                    className={errors.confirmPassword ? 'input-error' : ''}
                     required
                     placeholder="Re-enter your password"
                   />
+                  {errors.confirmPassword && <div className="error-message">{errors.confirmPassword}</div>}
                 </div>
               </div>
             </motion.div>
@@ -243,9 +373,11 @@ const RegisterShelter = () => {
                   name="shelterName"
                   value={formData.shelterName}
                   onChange={handleInputChange}
+                  className={errors.shelterName ? 'input-error' : ''}
                   required
                   placeholder="Enter your shelter's official name"
                 />
+                {errors.shelterName && <div className="error-message">{errors.shelterName}</div>}
               </div>
               
               <div className="form-group">
@@ -256,8 +388,10 @@ const RegisterShelter = () => {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
+                  className={errors.phone ? 'input-error' : ''}
                   placeholder="Enter a contact phone number"
                 />
+                {errors.phone && <div className="error-message">{errors.phone}</div>}
               </div>
               
               <div className="form-group">
@@ -268,9 +402,11 @@ const RegisterShelter = () => {
                   name="address"
                   value={formData.address}
                   onChange={handleInputChange}
+                  className={errors.address ? 'input-error' : ''}
                   required
                   placeholder="Enter your shelter's street address"
                 />
+                {errors.address && <div className="error-message">{errors.address}</div>}
               </div>
               
               <div className="form-row">
@@ -282,7 +418,7 @@ const RegisterShelter = () => {
                     value={formData.city}
                     onChange={handleInputChange}
                     required
-                    className="select-input"
+                    className={`select-input ${errors.city ? 'input-error' : ''}`}
                   >
                     <option value="">Select City</option>
                     <option value="Cairo">Cairo</option>
@@ -298,6 +434,7 @@ const RegisterShelter = () => {
                     <option value="Suez">Suez</option>
                     <option value="Ismailia">Ismailia</option>
                   </select>
+                  {errors.city && <div className="error-message">{errors.city}</div>}
                 </div>
                 
                 <div className="form-group">
@@ -308,7 +445,7 @@ const RegisterShelter = () => {
                     value={formData.state}
                     onChange={handleInputChange}
                     required
-                    className="select-input"
+                    className={`select-input ${errors.state ? 'input-error' : ''}`}
                   >
                     <option value="">Select Governorate</option>
                     <option value="Cairo">Cairo</option>
@@ -330,6 +467,7 @@ const RegisterShelter = () => {
                     <option value="Asyut">Asyut</option>
                     <option value="Faiyum">Faiyum</option>
                   </select>
+                  {errors.state && <div className="error-message">{errors.state}</div>}
                 </div>
                 
                 <div className="form-group">
@@ -342,7 +480,9 @@ const RegisterShelter = () => {
                     onChange={handleInputChange}
                     required
                     placeholder="Postal Code"
+                    className={errors.zipCode ? 'input-error' : ''}
                   />
+                  {errors.zipCode && <div className="error-message">{errors.zipCode}</div>}
                 </div>
               </div>
               
@@ -360,7 +500,7 @@ const RegisterShelter = () => {
               
               <div className="form-group">
                 <label>Pet Types (Select all that apply)</label>
-                <div className="checkbox-group">
+                <div className={`checkbox-group ${errors.petTypes ? 'checkbox-group-error' : ''}`}>
                   <label className="checkbox-container">
                     <input
                       type="checkbox"
@@ -421,6 +561,7 @@ const RegisterShelter = () => {
                     <span className="checkbox-label">Other</span>
                   </label>
                 </div>
+                {errors.petTypes && <div className="error-message">{errors.petTypes}</div>}
               </div>
               
               <div className="form-group">
@@ -498,7 +639,7 @@ const RegisterShelter = () => {
               </div>
 
               <div className="form-group">
-                <label className="checkbox-container">
+                <label className={`checkbox-container ${errors.acceptTerms ? 'checkbox-container-error' : ''}`}>
                   <input
                     type="checkbox"
                     name="acceptTerms"
@@ -510,6 +651,7 @@ const RegisterShelter = () => {
                     I agree to the Terms of Service and Privacy Policy
                   </span>
                 </label>
+                {errors.acceptTerms && <div className="error-message">{errors.acceptTerms}</div>}
               </div>
             </motion.div>
           )}
