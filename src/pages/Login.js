@@ -4,14 +4,61 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './Pages.css';
 import dogImage from '../assets/images/dog-please-adopt-me-fb.jpg';
 
-export default function Login() {
+export default function Login({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  
+  // Sample user credentials (in a real app, this would be server-side validation)
+  const users = {
+    // Regular users
+    "user1": { password: "password1", role: "user", name: "John Doe" },
+    "user2": { password: "password2", role: "user", name: "Jane Smith" },
+    // Shelter accounts
+    "happypaws": { password: "shelter123", role: "shelter", name: "Happy Paws Shelter" },
+    "cairorescue": { password: "cairo456", role: "shelter", name: "Cairo Pet Rescue" }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Login Attempt", { username, password });
-    // Handle login logic here
+    setError("");
+    setLoading(true);
+    
+    // Simulate API call delay
+    setTimeout(() => {
+      const user = users[username];
+      
+      if (!user) {
+        setError("Username not found");
+        setLoading(false);
+        return;
+      }
+      
+      if (user.password !== password) {
+        setError("Invalid password");
+        setLoading(false);
+        return;
+      }
+      
+      // Successfully authenticated
+      localStorage.setItem('isLoggedIn', 'true');
+      localStorage.setItem('userRole', user.role);
+      localStorage.setItem('userName', user.name);
+      localStorage.setItem('username', username);
+      
+      // Call the onLogin handler from props
+      onLogin();
+      
+      // Redirect to appropriate dashboard based on role
+      if (user.role === 'shelter') {
+        window.location.href = '/shelter-dashboard';
+      } else {
+        window.location.href = '/profile';
+      }
+      
+      setLoading(false);
+    }, 1000);
   };
 
   return (

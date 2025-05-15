@@ -1,0 +1,938 @@
+/* 
+ * ShelterDashboard.css - Pet Adoption Platform
+ * Matches the design system of Landing.css and RegisterShelter.css
+ */
+
+/* Dashboard Layout */
+.shelter-dashboard {
+  min-height: 100vh;
+  padding: 2rem;
+  background-color: var(--color-gray-50);
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.dashboard-title h1 {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-3xl);
+  margin-bottom: 0.5rem;
+  background: linear-gradient(45deg, var(--color-primary), var(--color-secondary-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dashboard-title p {
+  color: var(--color-gray-600);
+  font-size: var(--font-size-lg);
+}
+
+.dashboard-quick-stats {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.quick-stat {
+  background: white;
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.5rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120px;
+  transition: all 0.3s ease;
+}
+
+.quick-stat:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.stat-value {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+}
+
+/* Dashboard Tabs */
+.dashboard-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--color-gray-200);
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.tab-button {
+  background: transparent;
+  border: none;
+  padding: 0.75rem 1.25rem;
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-base);
+  color: var(--color-gray-600);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.tab-button:hover {
+  color: var(--color-primary);
+  background-color: rgba(108, 95, 141, 0.05);
+}
+
+.tab-button.active {
+  color: var(--color-primary);
+  border-bottom: 3px solid var(--color-primary);
+}
+
+.tab-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+}
+
+.inbox-button {
+  margin-left: auto;
+  background-color: var(--color-primary);
+  color: white;
+  border-radius: var(--radius-lg);
+}
+
+.inbox-button:hover {
+  background-color: var(--color-primary-dark);
+  color: white;
+}
+
+.inbox-button .tab-icon {
+  opacity: 1;
+  filter: brightness(10);
+}
+
+/* Dashboard Content */
+.dashboard-content {
+  position: relative;
+  min-height: 400px;
+}
+
+.tab-content {
+  padding: 1rem 0;
+}
+
+/* Card Styles */
+.card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-gray-200);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-header h2 {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+  font-size: var(--font-size-xl);
+  margin: 0;
+}
+
+/* Shelter Info Tab */
+.shelter-info {
+  padding: 1.5rem;
+}
+
+.shelter-info-main {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.shelter-logo-container {
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+}
+
+.shelter-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  border: 2px solid var(--color-gray-200);
+}
+
+.shelter-logo-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, var(--color-primary-light), var(--color-secondary));
+  border-radius: var(--radius-lg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-secondary);
+  font-size: 3rem;
+  font-weight: var(--font-weight-bold);
+  color: white;
+}
+
+.shelter-details {
+  flex: 1;
+  min-width: 300px;
+}
+
+.shelter-details h3 {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-800);
+  font-size: var(--font-size-2xl);
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.shelter-details p {
+  margin-bottom: 0.5rem;
+  color: var(--color-gray-700);
+}
+
+.shelter-pet-types {
+  margin-top: 1rem;
+}
+
+.pet-type-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.pet-type-tag {
+  background-color: var(--color-primary-light);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.shelter-description {
+  padding: 1rem;
+  background-color: var(--color-gray-50);
+  border-radius: var(--radius-md);
+}
+
+.shelter-description h4 {
+  font-family: var(--font-secondary);
+  color: var(--color-gray-800);
+  margin-top: 0;
+  font-size: var(--font-size-lg);
+}
+
+.shelter-description p {
+  color: var(--color-gray-700);
+  line-height: var(--line-height-relaxed);
+}
+
+/* Shelter Credentials Box */
+.shelter-credentials-container {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background-color: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--color-primary);
+}
+
+.shelter-credentials-container h4 {
+  font-family: var(--font-secondary);
+  color: var(--color-primary);
+  margin-top: 0;
+  font-size: var(--font-size-lg);
+  margin-bottom: 0.5rem;
+}
+
+.credentials-note {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
+  font-style: italic;
+  margin-bottom: 1rem;
+}
+
+.credentials-box {
+  background-color: white;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.credential-item {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.credential-item:last-child {
+  border-bottom: none;
+}
+
+.credential-label {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
+  width: 90px;
+}
+
+.credential-value {
+  color: var(--color-gray-800);
+  font-family: var(--font-monospace, monospace);
+  background-color: var(--color-gray-100);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  margin-right: 0.75rem;
+}
+
+.btn-show-password {
+  margin-left: auto;
+  background-color: transparent;
+  border: 1px solid var(--color-gray-300);
+  color: var(--color-gray-600);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-show-password:hover {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-800);
+}
+
+.btn-edit {
+  padding: 0.5rem 1.25rem;
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-700);
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-medium);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-edit:hover {
+  background-color: var(--color-gray-300);
+  color: var(--color-gray-800);
+}
+
+.shelter-edit-form {
+  padding: 1.5rem;
+}
+
+/* Managing Pets Tab */
+.pets-management {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.add-pet-card {
+  height: fit-content;
+}
+
+.add-pet-form {
+  padding: 1.5rem;
+}
+
+.pets-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.pet-card {
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.pet-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.pet-card-header {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-gray-50);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.pet-card-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.pet-card-status[data-status="available"] {
+  background-color: var(--color-success);
+  color: white;
+}
+
+.pet-card-status[data-status="adopted"] {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.pet-card-status[data-status="pending"] {
+  background-color: var(--color-secondary);
+  color: white;
+}
+
+.pet-card-status[data-status="medical"] {
+  background-color: var(--color-error);
+  color: white;
+}
+
+.pet-card-actions .btn-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-700);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: all 0.2s ease;
+}
+
+.pet-card-actions .btn-icon:hover {
+  background-color: var(--color-error);
+  color: white;
+}
+
+.pet-card-content {
+  padding: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.pet-image-container {
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+}
+
+.pet-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.pet-image-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, var(--color-primary-light), var(--color-secondary));
+  border-radius: var(--radius-md);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: var(--font-secondary);
+  font-size: 2.5rem;
+  font-weight: var(--font-weight-bold);
+  color: white;
+}
+
+.pet-details {
+  flex: 1;
+}
+
+.pet-details h3 {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-800);
+  font-size: var(--font-size-xl);
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.pet-emoji {
+  margin-left: 0.5rem;
+  font-size: var(--font-size-xl);
+}
+
+.pet-type-breed {
+  color: var(--color-gray-600);
+  margin-bottom: 0.75rem;
+  font-weight: var(--font-weight-medium);
+}
+
+.pet-details p {
+  margin: 0.25rem 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-700);
+}
+
+.pet-added-date {
+  color: var(--color-gray-500) !important;
+  font-size: var(--font-size-xs) !important;
+  margin-top: 0.75rem !important;
+}
+
+.pet-story {
+  margin-top: 0.75rem;
+}
+
+.pet-story p {
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+.pet-card-footer {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-gray-50);
+  border-top: 1px solid var(--color-gray-200);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pet-card-footer label {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-700);
+  font-weight: var(--font-weight-medium);
+}
+
+.status-select {
+  background-color: white;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Adoption Requests Tab */
+.adoption-requests-list {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.requests-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.requests-table th,
+.requests-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.requests-table th {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+}
+
+.request-row:hover {
+  background-color: var(--color-gray-50);
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+  min-width: 80px;
+}
+
+.status-pending {
+  background-color: var(--color-secondary-light);
+  color: var(--color-secondary-dark);
+}
+
+.status-approved {
+  background-color: var(--color-success);
+  color: white;
+}
+
+.status-rejected {
+  background-color: var(--color-error);
+  color: white;
+}
+
+.message-preview {
+  max-width: 200px;
+  max-height: 45px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-style: italic;
+  color: var(--color-gray-600);
+}
+
+.request-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-approve,
+.btn-reject,
+.btn-chat {
+  padding: 0.4rem 0.75rem;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.btn-approve {
+  background-color: var(--color-success);
+  color: white;
+}
+
+.btn-approve:hover {
+  background-color: #709e87;
+}
+
+.btn-reject {
+  background-color: var(--color-error);
+  color: white;
+}
+
+.btn-reject:hover {
+  background-color: #cd6a7c;
+}
+
+.btn-chat {
+  background-color: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+}
+
+.btn-chat:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.action-icon {
+  width: 16px;
+  height: 16px;
+  filter: brightness(10);
+}
+
+/* Donations Tab */
+.donations-management {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.donations-summary-card {
+  grid-column: 1 / -1;
+}
+
+.donations-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.donation-stat {
+  background-color: var(--color-gray-50);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.donation-stat h3 {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
+  font-size: var(--font-size-lg);
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.donation-amount {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+}
+
+.banking-info {
+  grid-column: 1 / -1;
+  background-color: var(--color-gray-50);
+  padding: 1.5rem;
+  border-radius: var(--radius-md);
+}
+
+.banking-info h3 {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
+  font-size: var(--font-size-lg);
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.bank-account-info {
+  padding: 1rem;
+  background-color: white;
+  border-radius: var(--radius-md);
+  border-left: 4px solid var(--color-success);
+}
+
+.missing-bank {
+  border-left: 4px solid var(--color-error);
+}
+
+.bank-notice {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+  margin-top: 0.5rem;
+}
+
+.add-donation-form {
+  padding: 1.5rem;
+}
+
+.donation-campaigns-card {
+  grid-column: 1 / -1;
+}
+
+.donation-campaigns-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+.donation-campaign-card {
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.donation-campaign-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.campaign-header {
+  padding: 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--color-gray-50);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.campaign-header h3 {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-800);
+  font-size: var(--font-size-lg);
+  margin: 0;
+}
+
+.campaign-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.campaign-status.active {
+  background-color: var(--color-success);
+  color: white;
+}
+
+.campaign-status.inactive {
+  background-color: var(--color-gray-400);
+  color: white;
+}
+
+.campaign-body {
+  padding: 1.5rem;
+}
+
+.campaign-description {
+  color: var(--color-gray-700);
+  margin-bottom: 1.5rem;
+  line-height: var(--line-height-relaxed);
+}
+
+.campaign-progress {
+  margin-bottom: 1rem;
+}
+
+.progress-bar {
+  height: 8px;
+  background-color: var(--color-gray-200);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 0.5rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--color-primary);
+  border-radius: var(--radius-full);
+}
+
+.progress-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-600);
+}
+
+.campaign-dates {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-500);
+}
+
+/* Form Navigation */
+.form-navigation {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2rem;
+  gap: 1rem;
+}
+
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+  background-color: var(--color-primary);
+  color: white;
+  box-shadow: 0 4px 6px rgba(108, 95, 141, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(108, 95, 141, 0.3);
+}
+
+.btn-primary:disabled {
+  background-color: var(--color-gray-400);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.form-error {
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  margin-left: 1rem;
+}
+
+/* Empty State */
+.empty-state {
+  padding: 3rem;
+  text-align: center;
+  color: var(--color-gray-500);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .pets-management,
+  .donations-management {
+    grid-template-columns: 1fr;
+  }
+  
+  .pets-list {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+  
+  .dashboard-quick-stats {
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .shelter-info-main {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .dashboard-header {
+    flex-direction: column;
+  }
+  
+  .dashboard-quick-stats {
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+  }
+  
+  .quick-stat {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .requests-table {
+    display: block;
+    overflow-x: auto;
+  }
+}
