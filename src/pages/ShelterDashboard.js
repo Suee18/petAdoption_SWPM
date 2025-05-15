@@ -88,6 +88,63 @@ const ShelterDashboard = () => {
       requestDate: '2025-05-12',
       status: 'Pending',
       message: 'I have been looking for a cat like Luna for months. Would love to give her a good home.'
+    },
+    {
+      id: 'req-003',
+      petId: 'pet-003',
+      petName: 'Buddy',
+      requestedBy: 'ahmed_hassan',
+      requesterName: 'Ahmed Hassan',
+      requestDate: '2025-05-01',
+      status: 'Approved',
+      message: 'I would be honored to provide Buddy with a loving home. I have experience with dogs and a large, fenced yard.',
+      approvedDate: '2025-05-03'
+    },
+    {
+      id: 'req-004',
+      petId: 'pet-004',
+      petName: 'Bella',
+      requestedBy: 'leila_mohamed',
+      requesterName: 'Leila Mohamed',
+      requestDate: '2025-04-25',
+      status: 'Approved',
+      message: 'I have always wanted a cat like Bella. I live alone and would give her all my attention.',
+      approvedDate: '2025-04-28'
+    }
+  ]);
+  
+  // Mock approved adoptions with delivery/pickup details
+  const [approvedAdoptions, setApprovedAdoptions] = useState([
+    {
+      requestId: 'req-003',
+      petId: 'pet-003',
+      petName: 'Buddy',
+      requestedBy: 'ahmed_hassan',
+      requesterName: 'Ahmed Hassan',
+      approvedDate: '2025-05-03',
+      processStatus: 'pickup_pending',
+      scheduledDate: '2025-05-15',
+      userResponse: null,
+      deliveryDetails: null,
+      notes: 'Adopter will visit on May 15th to pick up Buddy'
+    },
+    {
+      requestId: 'req-004',
+      petId: 'pet-004',
+      petName: 'Bella',
+      requestedBy: 'leila_mohamed',
+      requesterName: 'Leila Mohamed',
+      approvedDate: '2025-04-28',
+      processStatus: 'delivery_scheduled',
+      scheduledDate: '2025-05-16',
+      userResponse: 'delivery',
+      deliveryDetails: {
+        address: '123 Nile Street, Cairo',
+        contactPhone: '+20 456-789-0123',
+        preferredTime: '2pm - 5pm',
+        specialInstructions: 'Please call before arrival'
+      },
+      notes: 'Delivery scheduled for May 16th afternoon'
     }
   ]);
 
@@ -208,9 +265,121 @@ const ShelterDashboard = () => {
 
   // Handler for adoption request action
   const handleAdoptionRequestAction = (requestId, action) => {
-    setAdoptionRequests(prev => prev.map(req => 
-      req.id === requestId ? { ...req, status: action } : req
+    // Update the request status
+    const updatedRequests = adoptionRequests.map(req => 
+      req.id === requestId ? { ...req, status: action, approvedDate: action === 'Approved' ? new Date().toISOString().split('T')[0] : req.approvedDate } : req
+    );
+    setAdoptionRequests(updatedRequests);
+    
+    // If approved, add to approved adoptions
+    if (action === 'Approved') {
+      const approvedRequest = updatedRequests.find(req => req.id === requestId);
+      setApprovedAdoptions(prev => [
+        ...prev,
+        {
+          requestId: approvedRequest.id,
+          petId: approvedRequest.petId,
+          petName: approvedRequest.petName,
+          requestedBy: approvedRequest.requestedBy,
+          requesterName: approvedRequest.requesterName,
+          approvedDate: new Date().toISOString().split('T')[0],
+          processStatus: 'new',
+          scheduledDate: null,
+          userResponse: null,
+          deliveryDetails: null,
+          notes: ''
+        }
+      ]);
+      
+      // Also update pet status to Pending
+      setPets(prev => prev.map(pet => 
+        pet.id === approvedRequest.petId ? { ...pet, status: 'Pending' } : pet
+      ));
+    }
+  };
+  
+  // State for the adoption process modal
+  const [processModal, setProcessModal] = useState({
+    isOpen: false,
+    adoption: null,
+    editMode: false,
+    scheduledDate: '',
+    notes: '',
+    processStatus: ''
+  });
+  
+  // Open the adoption process modal
+  const openProcessModal = (adoption, editMode = false) => {
+    setProcessModal({
+      isOpen: true,
+      adoption,
+      editMode,
+      scheduledDate: adoption.scheduledDate || '',
+      notes: adoption.notes || '',
+      processStatus: adoption.processStatus || 'new'
+    });
+  };
+  
+  // Close the adoption process modal
+  const closeProcessModal = () => {
+    setProcessModal({
+      isOpen: false,
+      adoption: null,
+      editMode: false,
+      scheduledDate: '',
+      notes: '',
+      processStatus: ''
+    });
+  };
+  
+  // Handle process modal form changes
+  const handleProcessModalChange = (e) => {
+    const { name, value } = e.target;
+    setProcessModal(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
+  // Update adoption process details
+  const updateAdoptionProcess = (e) => {
+    e.preventDefault();
+    
+    const { adoption, scheduledDate, notes, processStatus } = processModal;
+    
+    setApprovedAdoptions(prev => prev.map(item => 
+      item.requestId === adoption.requestId ? {
+        ...item,
+        scheduledDate,
+        notes,
+        processStatus
+      } : item
     ));
+    
+    closeProcessModal();
+  };
+  
+  // Mark adoption as completed
+  const completeAdoption = (requestId) => {
+    if (window.confirm('Are you sure you want to mark this adoption as completed? This will update the pet status to Adopted.')) {
+      // Update approved adoption status
+      setApprovedAdoptions(prev => prev.map(item => 
+        item.requestId === requestId ? {
+          ...item,
+          processStatus: 'completed'
+        } : item
+      ));
+      
+      // Find the petId from the approved adoption
+      const adoption = approvedAdoptions.find(a => a.requestId === requestId);
+      
+      // Update pet status to Adopted
+      if (adoption) {
+        setPets(prev => prev.map(pet => 
+          pet.id === adoption.petId ? { ...pet, status: 'Adopted' } : pet
+        ));
+      }
+    }
   };
 
   // Handler for donation form submission
@@ -301,6 +470,13 @@ const ShelterDashboard = () => {
         >
           <img src={donationIcon} alt="" className="tab-icon" />
           Donations
+        </button>
+        <button 
+          className={`tab-button ${activeTab === 'approved' ? 'active' : ''}`}
+          onClick={() => setActiveTab('approved')}
+        >
+          <span className="tab-icon">🏆</span>
+          Approved Adoptions
         </button>
         <button 
           className={`tab-button inbox-button`}
@@ -986,8 +1162,320 @@ const ShelterDashboard = () => {
               </div>
             </motion.div>
           )}
+          
+          {/* Approved Adoptions Tab */}
+          {activeTab === 'approved' && (
+            <motion.div 
+              className="tab-content"
+              key="approved-tab"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="card approved-adoptions-card">
+                <div className="card-header">
+                  <h2>Approved Adoptions</h2>
+                  <p className="subheader-text">Manage the next steps for approved adoptions</p>
+                </div>
+                
+                {approvedAdoptions.length === 0 ? (
+                  <div className="empty-state">
+                    <p>No approved adoptions yet. When you approve adoption requests, they will appear here.</p>
+                  </div>
+                ) : (
+                  <div className="approved-adoptions-list">
+                    {approvedAdoptions.map(adoption => (
+                      <div key={adoption.requestId} className="adoption-process-card">
+                        <div className={`process-status-badge ${adoption.processStatus}`}>
+                          {adoption.processStatus === 'new' && 'New Approval'}
+                          {adoption.processStatus === 'awaiting_response' && 'Awaiting User Response'}
+                          {adoption.processStatus === 'pickup_pending' && 'Pickup Scheduled'}
+                          {adoption.processStatus === 'pickup_completed' && 'Pickup Completed'}
+                          {adoption.processStatus === 'delivery_scheduled' && 'Delivery Scheduled'}
+                          {adoption.processStatus === 'delivery_completed' && 'Delivery Completed'}
+                          {adoption.processStatus === 'completed' && 'Adoption Completed'}
+                        </div>
+                        
+                        <div className="adoption-process-header">
+                          <h3>Pet: {adoption.petName}</h3>
+                          <p className="adopter-info">Adopter: {adoption.requesterName} ({adoption.requestedBy})</p>
+                          <p className="adoption-date">Approved on: {new Date(adoption.approvedDate).toLocaleDateString()}</p>
+                        </div>
+                        
+                        <div className="adoption-process-details">
+                          <div className="process-section">
+                            <h4>Process Status</h4>
+                            <div className="process-timeline">
+                              <div className={`timeline-step ${['new', 'awaiting_response', 'pickup_pending', 'pickup_completed', 'delivery_scheduled', 'delivery_completed', 'completed'].includes(adoption.processStatus) ? 'completed' : ''}`}>
+                                <div className="step-icon">1</div>
+                                <div className="step-label">Approved</div>
+                              </div>
+                              <div className="timeline-connector"></div>
+                              <div className={`timeline-step ${['pickup_pending', 'pickup_completed', 'delivery_scheduled', 'delivery_completed', 'completed'].includes(adoption.processStatus) ? 'completed' : ''}`}>
+                                <div className="step-icon">2</div>
+                                <div className="step-label">Scheduled</div>
+                              </div>
+                              <div className="timeline-connector"></div>
+                              <div className={`timeline-step ${['pickup_completed', 'delivery_completed', 'completed'].includes(adoption.processStatus) ? 'completed' : ''}`}>
+                                <div className="step-icon">3</div>
+                                <div className="step-label">Completed</div>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {adoption.scheduledDate && (
+                            <div className="process-section">
+                              <h4>{adoption.userResponse === 'delivery' ? 'Delivery' : 'Pickup'} Details</h4>
+                              <p>
+                                <strong>Scheduled Date:</strong> {new Date(adoption.scheduledDate).toLocaleDateString()}
+                              </p>
+                              {adoption.userResponse === 'delivery' && adoption.deliveryDetails && (
+                                <>
+                                  <p><strong>Delivery Address:</strong> {adoption.deliveryDetails.address}</p>
+                                  <p><strong>Contact Phone:</strong> {adoption.deliveryDetails.contactPhone}</p>
+                                  <p><strong>Preferred Time:</strong> {adoption.deliveryDetails.preferredTime}</p>
+                                  {adoption.deliveryDetails.specialInstructions && (
+                                    <p><strong>Special Instructions:</strong> {adoption.deliveryDetails.specialInstructions}</p>
+                                  )}
+                                </>
+                              )}
+                              {adoption.notes && (
+                                <p><strong>Notes:</strong> {adoption.notes}</p>
+                              )}
+                            </div>
+                          )}
+                          
+                          {adoption.userResponse === null && (
+                            <div className="process-section">
+                              <p className="user-response-pending">
+                                User has not yet chosen between pickup or delivery.
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                        
+                        <div className="adoption-process-actions">
+                          {adoption.processStatus === 'new' && (
+                            <button 
+                              className="btn-primary"
+                              onClick={() => openProcessModal(adoption, true)}
+                            >
+                              Set Up Process
+                            </button>
+                          )}
+                          
+                          {(adoption.processStatus === 'pickup_pending' || adoption.processStatus === 'delivery_scheduled') && (
+                            <>
+                              <button 
+                                className="btn-secondary"
+                                onClick={() => openProcessModal(adoption, true)}
+                              >
+                                Update Details
+                              </button>
+                              <button 
+                                className="btn-primary"
+                                onClick={() => completeAdoption(adoption.requestId)}
+                              >
+                                Mark as Completed
+                              </button>
+                            </>
+                          )}
+                          
+                          {(adoption.processStatus === 'pickup_completed' || adoption.processStatus === 'delivery_completed') && (
+                            <button 
+                              className="btn-primary"
+                              onClick={() => completeAdoption(adoption.requestId)}
+                            >
+                              Finalize Adoption
+                            </button>
+                          )}
+                          
+                          {adoption.processStatus !== 'new' && adoption.processStatus !== 'completed' && (
+                            <button 
+                              className="btn-view"
+                              onClick={() => openProcessModal(adoption, false)}
+                            >
+                              View Details
+                            </button>
+                          )}
+                          
+                          {adoption.processStatus === 'completed' && (
+                            <div className="adoption-completed-message">
+                              This adoption has been completed successfully!
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
+      
+      {/* Adoption Process Modal */}
+      {processModal.isOpen && (
+        <div className="modal-overlay">
+          <div className="process-modal">
+            <div className="modal-header">
+              <h3>
+                {processModal.editMode ? 'Manage Adoption Process' : 'Adoption Process Details'}
+              </h3>
+              <button className="btn-close" onClick={closeProcessModal}>×</button>
+            </div>
+            
+            <div className="modal-body">
+              {processModal.adoption && (
+                <div className="process-details-summary">
+                  <p><strong>Pet:</strong> {processModal.adoption.petName}</p>
+                  <p><strong>Adopter:</strong> {processModal.adoption.requesterName}</p>
+                  <p><strong>Approved Date:</strong> {new Date(processModal.adoption.approvedDate).toLocaleDateString()}</p>
+                  
+                  {processModal.editMode ? (
+                    <form onSubmit={updateAdoptionProcess} className="process-edit-form">
+                      <div className="form-group">
+                        <label htmlFor="processStatus">Process Status</label>
+                        <select
+                          id="processStatus"
+                          name="processStatus"
+                          value={processModal.processStatus}
+                          onChange={handleProcessModalChange}
+                          className="select-input"
+                          required
+                        >
+                          <option value="new">New Approval</option>
+                          <option value="awaiting_response">Awaiting User Response</option>
+                          <option value="pickup_pending">Pickup Scheduled</option>
+                          <option value="pickup_completed">Pickup Completed</option>
+                          <option value="delivery_scheduled">Delivery Scheduled</option>
+                          <option value="delivery_completed">Delivery Completed</option>
+                        </select>
+                      </div>
+                      
+                      <div className="form-group">
+                        <label htmlFor="scheduledDate">
+                          {processModal.processStatus.includes('pickup') ? 'Pickup' : 'Delivery'} Date
+                        </label>
+                        <input
+                          type="date"
+                          id="scheduledDate"
+                          name="scheduledDate"
+                          value={processModal.scheduledDate}
+                          onChange={handleProcessModalChange}
+                          min={new Date().toISOString().split('T')[0]}
+                        />
+                      </div>
+                      
+                      <div className="form-group">
+                        <label htmlFor="notes">Notes</label>
+                        <textarea
+                          id="notes"
+                          name="notes"
+                          value={processModal.notes}
+                          onChange={handleProcessModalChange}
+                          rows={3}
+                          placeholder="Add any notes or special instructions"
+                        ></textarea>
+                      </div>
+                      
+                      <div className="form-actions">
+                        <button type="button" className="btn-secondary" onClick={closeProcessModal}>
+                          Cancel
+                        </button>
+                        <button type="submit" className="btn-primary">
+                          Save Changes
+                        </button>
+                      </div>
+                    </form>
+                  ) : (
+                    <div className="process-view-details">
+                      <div className="detail-row">
+                        <span className="detail-label">Current Status:</span>
+                        <span className={`detail-value status ${processModal.adoption.processStatus}`}>
+                          {processModal.adoption.processStatus === 'new' && 'New Approval'}
+                          {processModal.adoption.processStatus === 'awaiting_response' && 'Awaiting User Response'}
+                          {processModal.adoption.processStatus === 'pickup_pending' && 'Pickup Scheduled'}
+                          {processModal.adoption.processStatus === 'pickup_completed' && 'Pickup Completed'}
+                          {processModal.adoption.processStatus === 'delivery_scheduled' && 'Delivery Scheduled'}
+                          {processModal.adoption.processStatus === 'delivery_completed' && 'Delivery Completed'}
+                          {processModal.adoption.processStatus === 'completed' && 'Adoption Completed'}
+                        </span>
+                      </div>
+                      
+                      {processModal.adoption.scheduledDate && (
+                        <div className="detail-row">
+                          <span className="detail-label">Scheduled Date:</span>
+                          <span className="detail-value">
+                            {new Date(processModal.adoption.scheduledDate).toLocaleDateString()}
+                          </span>
+                        </div>
+                      )}
+                      
+                      {processModal.adoption.userResponse && (
+                        <div className="detail-row">
+                          <span className="detail-label">User Preferred Method:</span>
+                          <span className="detail-value method">
+                            {processModal.adoption.userResponse === 'delivery' ? 'Delivery to Home' : 'Pickup from Shelter'}
+                          </span>
+                        </div>
+                      )}
+                      
+                      {processModal.adoption.userResponse === 'delivery' && processModal.adoption.deliveryDetails && (
+                        <div className="delivery-details-view">
+                          <h4>Delivery Details</h4>
+                          <div className="detail-row">
+                            <span className="detail-label">Address:</span>
+                            <span className="detail-value">{processModal.adoption.deliveryDetails.address}</span>
+                          </div>
+                          <div className="detail-row">
+                            <span className="detail-label">Phone:</span>
+                            <span className="detail-value">{processModal.adoption.deliveryDetails.contactPhone}</span>
+                          </div>
+                          <div className="detail-row">
+                            <span className="detail-label">Preferred Time:</span>
+                            <span className="detail-value">{processModal.adoption.deliveryDetails.preferredTime}</span>
+                          </div>
+                          {processModal.adoption.deliveryDetails.specialInstructions && (
+                            <div className="detail-row">
+                              <span className="detail-label">Special Instructions:</span>
+                              <span className="detail-value">{processModal.adoption.deliveryDetails.specialInstructions}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      
+                      {processModal.adoption.notes && (
+                        <div className="detail-row">
+                          <span className="detail-label">Notes:</span>
+                          <span className="detail-value notes">{processModal.adoption.notes}</span>
+                        </div>
+                      )}
+                      
+                      <div className="form-actions view-actions">
+                        <button className="btn-secondary" onClick={closeProcessModal}>
+                          Close
+                        </button>
+                        <button 
+                          className="btn-primary"
+                          onClick={() => {
+                            closeProcessModal();
+                            openProcessModal(processModal.adoption, true);
+                          }}
+                        >
+                          Edit Details
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

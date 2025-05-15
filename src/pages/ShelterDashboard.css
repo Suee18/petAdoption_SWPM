@@ -1,3 +1,4 @@
+/* filepath: /Users/osx/SWPM/petAdoption_SWPM/src/pages/ShelterDashboard.css */
 /* 
  * ShelterDashboard.css - Pet Adoption Platform
  * Matches the design system of Landing.css and RegisterShelter.css
@@ -22,16 +23,32 @@
   font-family: var(--font-secondary);
   font-weight: var(--font-weight-bold);
   color: var(--color-primary-dark);
-  font-size: var(--font-size-3xl);
+  font-size: 2.75rem;
   margin-bottom: 0.5rem;
   background: linear-gradient(45deg, var(--color-primary), var(--color-secondary-dark));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  text-shadow: 2px 4px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: inline-block;
+  letter-spacing: 0.5px;
+}
+
+.dashboard-title h1::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: var(--color-primary);
+  border-radius: 2px;
 }
 
 .dashboard-title p {
   color: var(--color-gray-600);
   font-size: var(--font-size-lg);
+  margin-top: 0.75rem;
 }
 
 .dashboard-quick-stats {
@@ -935,4 +952,413 @@
     display: block;
     overflow-x: auto;
   }
+}
+
+/* Message Modal */
+.message-modal {
+  background: white;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 500px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-lg);
+}
+
+.message-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.message-form textarea {
+  width: 100%;
+  min-height: 150px;
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-gray-300);
+  resize: vertical;
+}
+
+/* Approved Adoptions Tab */
+.approved-adoptions-card {
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.subheader-text {
+  color: var(--color-gray-500);
+  margin-top: 0.25rem;
+  font-size: var(--font-size-sm);
+}
+
+.approved-adoptions-list {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.adoption-process-card {
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  position: relative;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  max-width: 700px;
+  width: 100%;
+}
+
+.adoption-process-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.process-status-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.process-status-badge.new,
+.process-status-badge.awaiting_response,
+.process-status-badge.pickup_pending,
+.process-status-badge.pickup_completed,
+.process-status-badge.delivery_scheduled,
+.process-status-badge.delivery_completed,
+.process-status-badge.completed {
+  background-color: var(--color-primary);
+  color: white;
+  border: 1px solid rgba(103, 58, 183, 0.3);
+}
+
+.adoption-process-header {
+  margin-bottom: 1.5rem;
+  padding-right: 6rem;
+}
+
+.adoption-process-header h3 {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-800);
+  font-size: var(--font-size-lg);
+  margin: 0 0 0.5rem;
+}
+
+.adopter-info, .adoption-date {
+  color: var(--color-gray-600);
+  margin: 0.25rem 0;
+  font-size: var(--font-size-sm);
+}
+
+.adoption-process-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.process-section {
+  background-color: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+}
+
+.process-section h4 {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
+  margin: 0 0 1rem;
+  font-size: var(--font-size-base);
+}
+
+.process-timeline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 1rem 0;
+}
+
+.timeline-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.step-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: var(--color-gray-200);
+  color: var(--color-gray-600);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: var(--font-weight-bold);
+  transition: all 0.3s ease;
+}
+
+.timeline-step.completed .step-icon {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+.step-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-600);
+  font-weight: var(--font-weight-medium);
+}
+
+.timeline-step.completed .step-label {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.timeline-connector {
+  flex-grow: 1;
+  height: 2px;
+  background-color: var(--color-gray-200);
+  z-index: 1;
+}
+
+.user-response-pending {
+  color: var(--color-gray-500);
+  font-style: italic;
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+.adoption-process-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.adoption-process-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary {
+  background-color: white;
+  border: 1px solid var(--color-gray-300);
+  color: var(--color-gray-700);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-gray-100);
+}
+
+.btn-view {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-700);
+  border: none;
+}
+
+.btn-view:hover {
+  background-color: var(--color-gray-200);
+}
+
+.adoption-completed-message {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #388e3c;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  font-weight: var(--font-weight-medium);
+  text-align: center;
+}
+
+/* Process Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.process-modal {
+  background: white;
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.modal-header h3 {
+  font-family: var(--font-secondary);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-800);
+  font-size: var(--font-size-xl);
+  margin: 0;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--color-gray-500);
+  cursor: pointer;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.btn-close:hover {
+  background-color: var(--color-gray-100);
+  color: var(--color-gray-700);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.process-details-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.process-details-summary > p {
+  margin: 0;
+  color: var(--color-gray-700);
+}
+
+.process-edit-form {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.process-view-details {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.detail-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.detail-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-500);
+}
+
+.detail-value {
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-800);
+}
+
+.detail-value.status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-medium);
+}
+
+.detail-value.status.new {
+  background-color: rgba(103, 58, 183, 0.1);
+  color: var(--color-primary);
+}
+
+.detail-value.status.awaiting_response {
+  background-color: rgba(255, 152, 0, 0.1);
+  color: #f57c00;
+}
+
+.detail-value.status.pickup_pending {
+  background-color: rgba(3, 169, 244, 0.1);
+  color: #0288d1;
+}
+
+.detail-value.status.pickup_completed {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #388e3c;
+}
+
+.detail-value.status.delivery_scheduled {
+  background-color: rgba(156, 39, 176, 0.1);
+  color: #7b1fa2;
+}
+
+.detail-value.status.delivery_completed {
+  background-color: rgba(76, 175, 80, 0.1);
+  color: #388e3c;
+}
+
+.detail-value.status.completed {
+  background-color: rgba(0, 150, 136, 0.1);
+  color: #00796b;
+}
+
+.detail-value.method {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+}
+
+.detail-value.notes {
+  background-color: var(--color-gray-50);
+  padding: 0.75rem;
+  border-radius: var(--radius-md);
+  line-height: 1.5;
+}
+
+.delivery-details-view {
+  background-color: var(--color-gray-50);
+  padding: 1rem;
+  border-radius: var(--radius-md);
+  margin-top: 0.5rem;
+}
+
+.delivery-details-view h4 {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-700);
+  margin: 0 0 1rem;
+}
+
+.view-actions {
+  margin-top: 2rem;
 }
