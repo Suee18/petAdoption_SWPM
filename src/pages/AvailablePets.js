@@ -1,648 +1,864 @@
 import React, { useState, useEffect } from 'react';
-import styled, { keyframes, createGlobalStyle, css } from 'styled-components';
-import Slider from 'react-slick';
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import './AvailablePets.css';
+// import PetListingNew from './PetListingNew';
 
-const COLORS = {
-  primary: '#6C5F8D',
-  primaryDark: '#4B3F6E',
-  primaryLight: '#9C8CB9',
-  creamBg: '#DCD7D5',
-  secondary: '#BA96C1',
-  secondaryDark: '#6B39BC',
-  secondaryLight: '#C7AFF7',
-  accent: '#A68CEE',
-  success: '#86B9A1',
-  error: '#E57F92',
-  creamWhite: '#F2EFE5',
-  softBlack: '#333333'
-};
+// Online pet images
+import pawImage from '../media/LandingPage/paw1.png'; // Keep local paw image
 
-const GlobalStyle = createGlobalStyle`
-  @font-face {
-    font-family: 'Hieroglyphic';
-    src: url('/hieroglyphic-font.woff2') format('woff2');
-    font-display: swap;
-  }
-
-  ::-webkit-scrollbar {
-    width: 8px;
-    background: ${COLORS.creamBg};
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(45deg, ${COLORS.secondary}, ${COLORS.secondaryDark});
-    border-radius: 4px;
-  }
-
-  body {
-    margin: 0;
-    overflow-x: hidden;
-    background: ${COLORS.creamBg};
-    scroll-behavior: smooth;
-    font-family: 'Inter', sans-serif;
-  }
-
-  .slick-prev,
-  .slick-next {
-    z-index: 1;
-    width: 40px;
-    height: 40px;
-    
-    &:before {
-      font-family: 'Hieroglyphic';
-      color: ${COLORS.primaryDark};
-      font-size: 2rem;
-      text-shadow: 0 0 10px ${COLORS.secondaryLight}4D;
-      opacity: 1;
-    }
-  }
-
-  .slick-prev { left: 20px; }
-  .slick-next { right: 20px; }
-  .slick-prev:before { content: '𓀀'; }
-  .slick-next:before { content: '𓀁'; }
-
-  .slick-slide {
-    padding: 0 30px;
-    box-sizing: border-box;
-  }
-
-  .slick-list {
-    margin: 0 -30px;
-    overflow: hidden;
-  }
-
-  .slick-track {
-    display: flex !important;
-  }
-
-  .slick-slide > div {
-    height: 100%;
-  }
-`;
-
-const sliderSettings = {
-  dots: true,
-  infinite: true,
-  speed: 500,
-  slidesToShow: 3,
-  slidesToScroll: 1,
-  autoplay: true,
-  autoplaySpeed: 3000,
-  centerMode: false,
-  responsive: [
-    {
-      breakpoint: 1280,
-      settings: { slidesToShow: 2 }
-    },
-    {
-      breakpoint: 960,
-      settings: { 
-        slidesToShow: 2,
-        slidesToScroll: 1 
-      }
-    },
-    {
-      breakpoint: 640,
-      settings: { 
-        slidesToShow: 1,
-        slidesToScroll: 1 
-      }
-    }
-  ]
-};
-
-const flowIn = keyframes`
-  0% {
-    opacity: 0;
-    transform: translateY(50px) rotateZ(-5deg);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) rotateZ(0);
-  }
-`;
-
-const float = keyframes`
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-20px) rotate(5deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
-`;
-
-const drift = keyframes`
-  0% { transform: translateX(0) scale(1); }
-  50% { transform: translateX(20px) scale(0.9); }
-  100% { transform: translateX(0) scale(1); }
-`;
-
-const moveBackground = keyframes`
-  0% { transform: translate(-5%, -5%); }
-  50% { transform: translate(5%, 5%); }
-  100% { transform: translate(-5%, -5%); }
-`;
-
-const PetsPage = styled.div`
-  min-height: 100vh;
-  padding: 4rem 2rem;
-  background: linear-gradient(45deg, ${COLORS.creamBg}, ${COLORS.primaryLight});
-  position: relative;
-  overflow-x: hidden;
-  animation: ${css`${flowIn} 1s ease-out`};
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50px;
-    left: -50px;
-    width: calc(100% + 100px);
-    height: calc(100% + 100px);
-    background-image: url('data:image/svg+xml,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><text x="0" y="15" font-family="Hieroglyphic" font-size="20" fill="${COLORS.primaryDark}15">𓏇𓃛𓅃𓆣𓏇𓃛𓅃𓆣𓏇𓃛𓅃𓆣</text></svg>');
-    pointer-events: none;
-    z-index: 0;
-    animation: ${css`${moveBackground} 40s infinite linear`};
-  }
-`;
-
-const Title = styled.h1`
-  text-align: center;
-  font-size: 3rem;
-  margin-bottom: 4rem;
-  position: relative;
-  font-family: 'Varela Round', sans-serif;
-  text-shadow: 0 0 15px ${COLORS.secondaryLight}4D;
-  color: ${COLORS.primaryDark};
-  z-index: 2;
-  opacity: 0;
-  animation: ${css`${flowIn} 0.8s ease-out forwards`};
-
-  &::after {
-    content: '𓏇𓃠𓅭𓆓𓃀';
-    position: absolute;
-    bottom: -40px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 2rem;
-    opacity: 0.3;
-    color: ${COLORS.primary};
-  }
-`;
-
-const PetCard = styled.div`
-  background: linear-gradient(45deg, ${COLORS.primaryLight}, ${COLORS.secondaryLight});
-  border-radius: 15px;
-  padding: 1rem;
-  position: relative;
-  overflow: hidden;
-  transform-style: preserve-3d;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-  height: 400px;
-  width: 80px;
-  box-shadow: 0 8px 20px ${COLORS.primaryDark}1A;
-  margin: 0 15px;
-  opacity: 0;
-  animation: ${props => css`
-    ${flowIn} 0.6s ease-out ${props.$delay || '0'}s forwards
-  `};
-
-  &:hover {
-    transform: translateY(-3px) rotateX(1deg) rotateY(1deg);
-    
-    &::before {
-      opacity: 0.4;
-    }
-  }
-
-  &::after {
-    content: '${props => props.$icon}';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: 'Hieroglyphic';
-    font-size: 8rem;
-    color: ${COLORS.primaryDark}26;
-    animation: ${css`${drift} 20s infinite linear`};
-    pointer-events: none;
-    z-index: 1;
-  }
-`;
-
-const PetContent = styled.div`
-  position: relative;
-  z-index: 3;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const PetImage = styled.div`
-  width: 100%;
-  height: 160px;
-  border-radius: 10px;
-  background: ${props => `url(${props.src}) center/cover no-repeat`};
-  border: 2px solid ${COLORS.accent};
-  box-shadow: 0 0 20px ${COLORS.accent}33;
-  transition: transform 0.3s ease;
-`;
-
-const PetName = styled.h3`
-  color: ${COLORS.primaryDark};
-  font-size: 1.3rem;
-  margin: 0.8rem 0;
-  text-align: center;
-  font-family: 'Varela Round', sans-serif;
-`;
-
-const PetDescription = styled.p`
-  color: ${COLORS.primaryDark}CC;
-  font-size: 0.85rem;
-  line-height: 1.4;
-  text-align: center;
-  padding: 0 0.8rem;
-  max-height: ${props => props.$expanded ? 'none' : '60px'};
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-`;
-
-
-const AdoptButton = styled.button`
-  padding: 0.8rem;
-  background: linear-gradient(45deg, ${COLORS.secondaryDark}, ${COLORS.secondary});
-  border: none;
-  border-radius: 8px;
-  color: ${COLORS.creamWhite};
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: 1px solid ${COLORS.creamWhite}30;
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  
-  &:hover {
-    transform: scale(1.03);
-    box-shadow: 0 0 15px ${COLORS.secondary}4D;
-  }
-`;
-
-const steps = [
-  { icon: '𓀭', title: 'Choose Pet Type', text: 'Explore different animals available for adoption' },
-  { icon: '𓋴', title: 'Meet the Animals', text: 'Visit our center to interact with potential pets' },
-  { icon: '𓍯', title: 'Home Preparation', text: 'Get guidance on creating a pet-friendly environment' },
-  { icon: '𓎟', title: 'Finalize Adoption', text: 'Complete the adoption process and take home your friend' }
-];
-
-const AdoptionSteps = styled.div`
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
-  padding: 2rem;
-  margin: 4rem 0;
-  background: ${COLORS.primaryLight}CC;
-  border-radius: 15px;
-  position: relative;
-  opacity: 0;
-  animation: ${css`${flowIn} 0.8s ease-out forwards`};
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
-
-const StepCard = styled.div`
-  padding: 2rem;
-  background: ${COLORS.creamWhite}4D;
-  border-radius: 10px;
-  text-align: center;
-  transition: transform 0.3s ease;
-  opacity: 0;
-  animation: ${props => css`
-    ${flowIn} 0.6s ease-out ${props.$delay || '0'}s forwards
-  `};
-
-  &:hover {
-    transform: translateY(-10px);
-  }
-`;
-
-const StepIcon = styled.div`
-  font-family: 'Hieroglyphic';
-  font-size: 3rem;
-  margin-bottom: 1rem;
-  color: ${COLORS.accent};
-`;
-
-const ExpandableCard = styled.div.attrs(props => ({
-  style: {
-    maxHeight: props.$expanded ? '600px' : '80px'
-  }
-}))`
-  background: ${COLORS.primaryLight};
-  border-radius: 10px;
-  margin: 1rem 0;
-  padding: 1rem;
-  box-shadow: 0 2px 10px ${COLORS.primaryDark}26;
-  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow: hidden;
-  cursor: pointer;
-  border: 1px solid ${COLORS.primaryDark}30;
-
-  h3 {
-    color: ${COLORS.primaryDark};
-    margin: 0;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    transition: all 0.3s ease;
-  }
-
-  &:hover {
-    box-shadow: 0 4px 15px ${COLORS.primaryDark}33;
-  }
-`;
-
-const PetThumbnail = styled.div`
-  width: 60px;
-  height: 60px;
-  border-radius: 10px;
-  background: ${props => `url(${props.src}) center/cover no-repeat`};
-  border: 2px solid ${COLORS.accent};
-  box-shadow: 0 2px 8px ${COLORS.accent}33;
-`;
-
-const DetailGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-  padding: 1.5rem;
-  background: ${COLORS.creamWhite}1A;
-  border-radius: 8px;
-  margin-top: 1rem;
-
-  p {
-    margin: 0;
-    padding: 0.8rem;
-    background: ${COLORS.creamWhite}33;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.95rem;
-
-    &::before {
-      font-family: 'Hieroglyphic';
-      font-size: 1.2rem;
-    }
-  }
-
-  p:nth-child(1)::before { content: '𓀭'; }
-  p:nth-child(2)::before { content: '𓃠'; }
-  p:nth-child(3)::before { content: '𓆸'; }
-  p:nth-child(4)::before { content: '𓋹'; }
-`;
-
-const CatIcon = styled.div`
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  font-family: 'Hieroglyphic';
-  font-size: 3rem;
-  color: ${COLORS.accent};
-  cursor: pointer;
-  transition: transform 0.3s ease;
-  z-index: 1000;
-  text-shadow: 0 2px 5px ${COLORS.primaryDark}4D;
-
-  &:hover {
-    transform: scale(1.1) rotate(-15deg);
-  }
-
-  &::before {
-    content: '𓃠';
-  }
-`;
-
-const petTypes = [
-  {
-    type: 'Cat',
-    image: 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    description: 'Playful and affectionate feline friends looking for loving homes.',
-    icon: '𓃠',
-    pattern: '𓃠',
-    pets: [
-      { 
-        name: 'Bastet', 
-        age: 2, 
-        breed: 'Egyptian Mau', 
-        personality: 'Curious and affectionate',
-        image: 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-        location: 'Giza Sanctuary',
-        health: 'Vaccinated & Neutered'
-      },
-      {
-        name: 'Sekhmet',
-        age: 4,
-        breed: 'Abyssinian',
-        personality: 'Regal and independent',
-        image: 'https://images.unsplash.com/photo-1557246565-8a3d3ab5d7f6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-        location: 'Alexandria Shelter',
-        health: 'Vaccinated & Chipped'
-      }
-    ]
-  },
-  {
-    type: 'Dog',
-    image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    description: 'Loyal and energetic canine pals ready to join your family.',
-    icon: '𓃛',
-    pattern: '𓃛',
-    pets: [
-      {
-        name: 'Anubis',
-        age: 3,
-        breed: 'Pharaoh Hound',
-        personality: 'Loyal and protective',
-        image: 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-        location: 'Luxor Kennels',
-        health: 'Vaccinated & Trained'
-      }
-    ]
-  },
-  {
-    type: 'Bird',
-    image: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    description: 'Colorful feathered friends singing for new nests.',
-    icon: '𓅃',
-    pattern: '𓅃',
-    pets: [
-      {
-        name: 'Horus',
-        age: 1,
-        breed: 'African Grey',
-        personality: 'Intelligent and talkative',
-        image: 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-        location: 'Memphis Aviary',
-        health: 'Vaccinated & Wing-clipped'
-      }
-    ]
-  },
-  {
-    type: 'Reptile',
-    image: 'https://images.unsplash.com/photo-1578632749014-ca7715ff6357?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-    description: 'Unique scaled companions for exotic pet lovers.',
-    icon: '𓆣',
-    pattern: '𓆣',
-    pets: [
-      {
-        name: 'Sobek',
-        age: 5,
-        breed: 'Leopard Gecko',
-        personality: 'Calm and observant',
-        image: 'https://images.unsplash.com/photo-1578632749014-ca7715ff6357?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-        location: 'Thebes Reptile House',
-        health: 'Vaccinated & Healthy'
-      }
-    ]
-  }
-];
-
-const useScrollAnimation = () => {
-  const [animated, setAnimated] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 100 && !animated) {
-        setAnimated(true);
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [animated]);
-
-  return animated;
-};
-
-const PetGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
-  padding: 2rem;
-  justify-content: center;
-`;
-
-const PetDetailsPage = ({ petType, onBack }) => {
-  const [expandedPet, setExpandedPet] = useState(null);
-  const currentPets = petTypes.find(t => t.type === petType)?.pets || [];
-
-  return (
-    <div style={{ padding: '2rem' }}>
-      <button onClick={onBack} style={{ 
-        background: '#8a4b08',
-        color: 'white',
-        padding: '0.5rem 1rem',
-        border: 'none',
-        borderRadius: '5px',
-        marginBottom: '2rem'
-      }}>
-        𓀀 Back
-      </button>
-      <h2 style={{ color: '#4a2c2a', textAlign: 'center' }}>Available {petType}</h2>
-      <PetGrid>
-        {currentPets.map((pet, index) => (
-          <PetCard 
-            key={pet.name}
-            $expanded={expandedPet === index}
-            onClick={() => setExpandedPet(expandedPet === index ? null : index)}
-            $pattern={petTypes.find(t => t.type === petType).pattern}
-          >
-            <PetContent>
-              <PetImage src={pet.image} role="img" aria-label={pet.name} />
-              <PetName>{pet.name}</PetName>
-              <PetDescription $expanded={expandedPet === index}>
-                {pet.personality}
-                {expandedPet === index && (
-                  <>
-                    <p>Age: {pet.age} years</p>
-                    <p>Breed: {pet.breed}</p>
-                    <p>Location: {pet.location}</p>
-                    <p>Health: {pet.health}</p>
-                  </>
-                )}
-              </PetDescription>
-              <AdoptButton>
-                𓋹 Adopt {pet.name} 𓍯
-              </AdoptButton>
-            </PetContent>
-          </PetCard>
-        ))}
-      </PetGrid>
-    </div>
-  );
-};
+// Define online image URLs for pet types
+const catImage = 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';
+const dogImage = 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';
+const birdImage = 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';
+const reptileImage = 'https://images.unsplash.com/photo-1578632749014-ca7715ff6357?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';
+const otherImage = 'https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80';
 
 const AvailablePets = () => {
   const [selectedType, setSelectedType] = useState(null);
+  const [showAdoptionSuccess, setShowAdoptionSuccess] = useState(false);
+  const [adoptedPet, setAdoptedPet] = useState(null);
+  const [pawsArray, setPawsArray] = useState([]);
+  const navigate = useNavigate();
+  
+  // Generate paw prints on component mount
+  useEffect(() => {
+    const newPaws = [];
+    for (let i = 0; i < 8; i++) {
+      newPaws.push({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        rotation: Math.random() * 360,
+        size: 30 + Math.random() * 25,
+        opacity: 0.3 + Math.random() * 0.3,
+      });
+    }
+    setPawsArray(newPaws);
+  }, []);
 
-  return (
-    <>
-      <GlobalStyle />
-      <PetsPage>
-        <CatIcon title="Sacred Cat of Egypt">𓏇</CatIcon>
-        
-        {!selectedType ? (
-          <>
-            <Title>Pets Available for Adoption</Title>
-            
-            <Slider {...sliderSettings}>
-              {petTypes.map((pet, index) => (
-                <PetCard 
-                  key={pet.type} 
-                  $delay={index * 0.3}
-                  $icon={pet.icon}
-                >
-                  <PetContent>
-                    <PetImage src={pet.image} role="img" aria-label={pet.type} />
-                    <PetName>{pet.type}</PetName>
-                    <PetDescription>{pet.description}</PetDescription>
-                    <AdoptButton onClick={() => setSelectedType(pet.type)}>
-                      𓋹 Adopt a {pet.type} 𓍯
-                    </AdoptButton>
-                  </PetContent>
-                </PetCard>
-              ))}
-            </Slider>
-            <AdoptionSteps>
-              {steps.map((step, index) => (
-                <StepCard 
-                  key={step.title} 
-                  $delay={index * 0.3}
-                >
-                  <StepIcon>{step.icon}</StepIcon>
-                  <h3>{step.title}</h3>
-                  <p>{step.text}</p>
-                </StepCard>
-              ))}
-            </AdoptionSteps> 
+  // Pet types data with images and descriptions
+  const petTypes = [
+    {
+      type: 'Cats',
+      image: catImage || 'https://images.unsplash.com/photo-1592194996308-7b43878e84a6?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      description: 'Playful and affectionate feline friends looking for loving homes.',
+      icon: '🐱'
+    },
+    {
+      type: 'Dogs',
+      image: dogImage || 'https://images.unsplash.com/photo-1587300003388-59208cc962cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      description: 'Loyal and energetic canine companions ready to join your family.',
+      icon: '🐶'
+    },
+    {
+      type: 'Birds',
+      image: birdImage || 'https://images.unsplash.com/photo-1552728089-57bdde30beb3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      description: 'Colorful feathered friends to brighten your home with song.',
+      icon: '🦜'
+    },
+    {
+      type: 'Reptiles',
+      image: reptileImage || 'https://images.unsplash.com/photo-1578632749014-ca7715ff6357?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      description: 'Fascinating scaled companions for the exotic pet enthusiast.',
+      icon: '🦎'
+    },
+    {
+      type: 'Other',
+      image: otherImage || 'https://images.unsplash.com/photo-1535930891776-0c2dfb7fda1a?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
+      description: 'Unique and special pets looking for their forever homes.',
+      icon: '🐹'
+    }
+  ];
 
-            <Title>Why Choose Us ?</Title>
-            <div style={{padding: '2rem', textAlign: 'center', color: COLORS.primaryDark}}>
-              <p>𓋹 All pets receive complete veterinary checks and vaccinations</p>
-              <p>𓍯 Best animal adoption service in Cairo for the past 10 years!</p>
-              <p>𓎟 Free access to training workshops and events</p>
-              <p>𓆣 Comprehensive care guides included with every adoption</p>
+  // Adoption steps with clear and helpful information
+  const adoptionSteps = [
+    {
+      step: 1,
+      title: 'Browse Available Pets',
+      description: 'Explore our selection of cats, dogs, birds, reptiles and other animals to find your perfect match.',
+      icon: '🔍'
+    },
+    {
+      step: 2,
+      title: 'Submit an Application',
+      description: 'Complete our adoption application form with your information and preferences.',
+      icon: '📝'
+    },
+    {
+      step: 3,
+      title: 'Meet Your New Friend',
+      description: 'Schedule a visit to meet the pet you\'re interested in and see if it\'s a good match.',
+      icon: '🤝'
+    },
+    {
+      step: 4,
+      title: 'Bring Your Pet Home',
+      description: 'Complete the adoption process, receive care guidance, and welcome your new family member!',
+      icon: '🏠'
+    }
+  ];
+
+  // Benefits of adopting from us
+  const benefits = [
+    {
+      title: 'Veterinary Checked',
+      description: 'All our pets receive complete health checks, vaccinations, and necessary treatments.'
+    },
+    {
+      title: 'Microchipped & Spayed/Neutered',
+      description: 'Pets are microchipped and spayed/neutered prior to adoption for their health and safety.'
+    },
+    {
+      title: 'Behavior Assessment',
+      description: 'Each pet undergoes behavior evaluation to match them with the right home environment.'
+    },
+    {
+      title: 'Ongoing Support',
+      description: 'Our team provides post-adoption guidance and resources for your pet care journey.'
+    }
+  ];
+
+  // When a pet type is selected
+  const handleSelectPetType = (type) => {
+    setSelectedType(type);
+    // Scroll to top when navigating to pet listings
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Handle going back to pet types
+  const handleBackToPetTypes = () => {
+    setSelectedType(null);
+    setShowAdoptionSuccess(false);
+  };
+
+  // Handle adoption request submission
+  const handleAdoptionRequest = (data) => {
+    // In a real app, you'd send this data to your backend
+    console.log('Adoption request submitted:', data);
+    
+    // Show success message
+    setAdoptedPet(data.pet);
+    setShowAdoptionSuccess(true);
+    
+    // Auto-scroll to success message
+    setTimeout(() => {
+      document.getElementById('adoption-success')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  // Mock data for pets by category
+  const petsByCategory = {
+    'Cats': [
+      {
+        id: 'cat1',
+        name: 'Whiskers',
+        age: '2 years',
+        gender: 'Female',
+        breed: 'Domestic Shorthair',
+        description: 'Playful and affectionate cat who loves to snuggle and play with toys.',
+        image: 'https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        status: 'Available'
+      },
+      {
+        id: 'cat2',
+        name: 'Oliver',
+        age: '1 year',
+        gender: 'Male',
+        breed: 'Maine Coon',
+        description: 'Very calm and gentle giant who loves attention and treats.',
+        image: 'https://images.unsplash.com/photo-1573865526739-10659fec78a5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        status: 'Available'
+      },
+      {
+        id: 'cat3',
+        name: 'Luna',
+        age: '3 years',
+        gender: 'Female',
+        breed: 'Siamese',
+        description: 'Chatty and social cat who follows you everywhere you go.',
+        image: 'https://images.unsplash.com/photo-1561948955-570b270e7c36?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        status: 'Available'
+      }
+    ],
+    'Dogs': [
+      {
+        id: 'dog1',
+        name: 'Max',
+        age: '4 years',
+        gender: 'Male',
+        breed: 'Golden Retriever',
+        description: 'Friendly and energetic dog who loves outdoor activities and playing fetch.',
+        image: 'https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        status: 'Available'
+      },
+      {
+        id: 'dog2',
+        name: 'Bella',
+        age: '2 years',
+        gender: 'Female',
+        breed: 'Beagle',
+        description: 'Curious and friendly dog who loves exploring and cuddling equally.',
+        image: 'https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        status: 'Available'
+      },
+      {
+        id: 'dog3',
+        name: 'Charlie',
+        age: '5 years',
+        gender: 'Male',
+        breed: 'Labrador Mix',
+        description: 'Loving and well-trained dog who gets along with everyone, including other pets.',
+        image: 'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        status: 'Available'
+      }
+    ],
+    'Birds': [
+      {
+        id: 'bird1',
+        name: 'Sky',
+        age: '1 year',
+        gender: 'Male',
+        breed: 'Budgerigar',
+        description: 'Colorful and cheerful bird who sings beautifully throughout the day.',
+        image: 'https://images.unsplash.com/photo-1522858547137-f1dcec554f55?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        status: 'Available'
+      },
+      {
+        id: 'bird2',
+        name: 'Rio',
+        age: '3 years',
+        gender: 'Female',
+        breed: 'Cockatiel',
+        description: 'Friendly and social bird who enjoys human interaction and learning tricks.',
+        image: 'https://images.unsplash.com/photo-1604832388091-d2faa74826a4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        status: 'Available'
+      }
+    ],
+    'Reptiles': [
+      {
+        id: 'rep1',
+        name: 'Spike',
+        age: '2 years',
+        gender: 'Male',
+        breed: 'Bearded Dragon',
+        description: 'Gentle reptile with lots of personality who enjoys basking and being handled.',
+        image: 'https://images.unsplash.com/photo-1591389703635-e15a07609b28?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        status: 'Available'
+      },
+      {
+        id: 'rep2',
+        name: 'Shell',
+        age: '5 years',
+        gender: 'Female',
+        breed: 'Russian Tortoise',
+        description: 'Calm tortoise who enjoys exploring and munching on fresh vegetables.',
+        image: 'https://images.unsplash.com/photo-1559253664-ca249d4608c6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        status: 'Available'
+      }
+    ],
+    'Other': [
+      {
+        id: 'oth1',
+        name: 'Peanut',
+        age: '1 year',
+        gender: 'Male',
+        breed: 'Holland Lop Rabbit',
+        description: 'Gentle and curious rabbit who loves to hop around and be petted.',
+        image: 'https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        status: 'Available'
+      },
+      {
+        id: 'oth2',
+        name: 'Nibbles',
+        age: '6 months',
+        gender: 'Female',
+        breed: 'Syrian Hamster',
+        description: 'Tiny ball of energy who loves running on her wheel and exploring tunnels.',
+        image: 'https://images.unsplash.com/photo-1425082661705-1834bfd09dca?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+        status: 'Available'
+      }
+    ]
+  };
+  
+  // State for the currently selected pet (for detailed view)
+  const [selectedPet, setSelectedPet] = useState(null);
+  const [adoptionFormData, setAdoptionFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    address: '',
+    maritalStatus: '',
+    childrenInHome: '',
+    petExperience: '',
+    housingType: '',
+    reason: ''
+  });
+
+  // Handle adoption form input changes
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setAdoptionFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+  
+  // Submit adoption request
+  const submitAdoptionRequest = (e) => {
+    e.preventDefault();
+    handleAdoptionRequest({
+      form: adoptionFormData,
+      pet: selectedPet
+    });
+    
+    // Reset form
+    setAdoptionFormData({
+      name: '',
+      email: '',
+      phone: '',
+      address: '',
+      reason: ''
+    });
+    
+    // Close the detailed view
+    setSelectedPet(null);
+  };
+  
+  // If a pet type is selected, show the specific pet listings
+  if (selectedType) {
+    // Get pets for this category
+    const petsToDisplay = petsByCategory[selectedType] || [];
+    
+    return (
+      <div className="pets-page-container">
+        <div className="pets-listings-container">
+          <div className="pets-listings-header">
+            <button 
+              className="pets-back-button"
+              onClick={handleBackToPetTypes}
+            >
+              ← Back to Pet Types
+            </button>
+            <h2 className="pets-listings-title">Available {selectedType}</h2>
+            <p className="pets-listings-subtitle">
+              {selectedType === 'Cats' && 'Find your purr-fect feline companion'}
+              {selectedType === 'Dogs' && 'Find your loyal canine friend'}
+              {selectedType === 'Birds' && 'Find your feathered companion'}
+              {selectedType === 'Reptiles' && 'Find your scaly friend'}
+              {selectedType === 'Other' && 'Find your special pet companion'}
+            </p>
+          </div>
+          
+          {petsToDisplay.length === 0 ? (
+            <div className="pets-no-results">
+              <h3>No {selectedType} available at the moment</h3>
+              <p>Please check back later or browse other pet categories.</p>
+              <button 
+                className="pets-primary-button"
+                onClick={handleBackToPetTypes}
+              >
+                Explore Other Pets
+              </button>
             </div>
-          </>
-        ) : (
-          <PetDetailsPage 
-            petType={selectedType} 
-            onBack={() => setSelectedType(null)}
-          />
+          ) : (
+            <div className="pets-grid">
+              {petsToDisplay.map(pet => (
+                <motion.div
+                  key={pet.id}
+                  className="pet-card"
+                  whileHover={{ 
+                    scale: 1.03,
+                    y: -5,
+                    boxShadow: '0 10px 25px rgba(0,0,0,0.15)'
+                  }}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <div className="pet-card-image-container">
+                    <img src={pet.image} alt={pet.name} className="pet-card-image" />
+                    <div className="pet-card-status" data-status={pet.status.toLowerCase()}>
+                      {pet.status}
+                    </div>
+                  </div>
+                  
+                  <div className="pet-card-content">
+                    <h3 className="pet-card-name">{pet.name}</h3>
+                    <div className="pet-card-details">
+                      <span>{pet.breed}</span>
+                      <span>•</span>
+                      <span>{pet.age}</span>
+                      <span>•</span>
+                      <span>{pet.gender}</span>
+                    </div>
+                    <p className="pet-card-description">{pet.description}</p>
+                    
+                    <button 
+                      className="pet-adopt-button"
+                      onClick={() => setSelectedPet(pet)}
+                    >
+                      Meet {pet.name}
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          )}
+        </div>
+        
+        {/* Pet Details Modal */}
+        {selectedPet && (
+          <div className="pet-detail-overlay">
+            <div className="pet-detail-modal">
+              <button 
+                className="pet-detail-close"
+                onClick={() => setSelectedPet(null)}
+              >
+                ×
+              </button>
+              
+              <div className="pet-detail-content">
+                <div className="pet-detail-header">
+                  <div className="pet-detail-images">
+                    <img 
+                      src={selectedPet.image} 
+                      alt={selectedPet.name} 
+                      className="pet-detail-main-image" 
+                    />
+                  </div>
+                  
+                  <div className="pet-detail-info">
+                    <h2 className="pet-detail-name">{selectedPet.name}</h2>
+                    <div className="pet-detail-status" data-status={selectedPet.status.toLowerCase()}>
+                      {selectedPet.status}
+                    </div>
+                    
+                    <div className="pet-detail-attributes">
+                      <div className="pet-attribute">
+                        <span className="pet-attribute-label">Breed</span>
+                        <span className="pet-attribute-value">{selectedPet.breed}</span>
+                      </div>
+                      <div className="pet-attribute">
+                        <span className="pet-attribute-label">Age</span>
+                        <span className="pet-attribute-value">{selectedPet.age}</span>
+                      </div>
+                      <div className="pet-attribute">
+                        <span className="pet-attribute-label">Gender</span>
+                        <span className="pet-attribute-value">{selectedPet.gender}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="pet-detail-about">
+                      <h3>About {selectedPet.name}</h3>
+                      <p>{selectedPet.description}</p>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="pet-adoption-form-container">
+                  <h3>Want to adopt {selectedPet.name}?</h3>
+                  <p className="pet-form-subtitle">Fill out this form and we'll contact you shortly to arrange a meeting.</p>
+                  
+                  <form className="pet-adoption-form" onSubmit={submitAdoptionRequest}>
+                    <div className="pet-form-row">
+                      <div className="pet-form-group">
+                        <label htmlFor="name">Full Name</label>
+                        <input 
+                          type="text" 
+                          id="name" 
+                          name="name" 
+                          value={adoptionFormData.name}
+                          onChange={handleFormChange}
+                          required 
+                        />
+                      </div>
+                      
+                      <div className="pet-form-group">
+                        <label htmlFor="email">Email</label>
+                        <input 
+                          type="email" 
+                          id="email" 
+                          name="email" 
+                          value={adoptionFormData.email}
+                          onChange={handleFormChange}
+                          required 
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="pet-form-row">
+                      <div className="pet-form-group">
+                        <label htmlFor="phone">Phone</label>
+                        <input 
+                          type="tel" 
+                          id="phone" 
+                          name="phone" 
+                          value={adoptionFormData.phone}
+                          onChange={handleFormChange}
+                          required 
+                        />
+                      </div>
+                      
+                      <div className="pet-form-group">
+                        <label htmlFor="address">Address</label>
+                        <input 
+                          type="text" 
+                          id="address" 
+                          name="address" 
+                          value={adoptionFormData.address}
+                          onChange={handleFormChange}
+                          required 
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="pet-form-row">
+                      <div className="pet-form-group">
+                        <label htmlFor="maritalStatus">Marital Status</label>
+                        <select
+                          id="maritalStatus"
+                          name="maritalStatus"
+                          value={adoptionFormData.maritalStatus || ''}
+                          onChange={handleFormChange}
+                          required
+                        >
+                          <option value="">Please select</option>
+                          <option value="single">Single</option>
+                          <option value="married">Married</option>
+                          <option value="divorced">Divorced</option>
+                          <option value="widowed">Widowed</option>
+                          <option value="domestic_partnership">Domestic Partnership</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                      
+                      <div className="pet-form-group">
+                        <label htmlFor="childrenInHome">Children in the Home</label>
+                        <select
+                          id="childrenInHome"
+                          name="childrenInHome"
+                          value={adoptionFormData.childrenInHome || ''}
+                          onChange={handleFormChange}
+                          required
+                        >
+                          <option value="">Please select</option>
+                          <option value="no">No children</option>
+                          <option value="under5">Yes, under 5 years old</option>
+                          <option value="5to12">Yes, 5-12 years old</option>
+                          <option value="13to18">Yes, 13-18 years old</option>
+                          <option value="mixed">Yes, mixed age groups</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div className="pet-form-row">
+                      <div className="pet-form-group">
+                        <label htmlFor="petExperience">Experience with Pets</label>
+                        <select
+                          id="petExperience"
+                          name="petExperience"
+                          value={adoptionFormData.petExperience || ''}
+                          onChange={handleFormChange}
+                          required
+                        >
+                          <option value="">Please select</option>
+                          <option value="first_time">First-time pet owner</option>
+                          <option value="previous">Had pets previously</option>
+                          <option value="current">Currently have other pets</option>
+                          <option value="experienced">Experienced with multiple pets</option>
+                          <option value="professional">Professional experience (vet, trainer, etc.)</option>
+                        </select>
+                      </div>
+                      
+                      <div className="pet-form-group">
+                        <label htmlFor="housingType">Housing Type</label>
+                        <select
+                          id="housingType"
+                          name="housingType"
+                          value={adoptionFormData.housingType || ''}
+                          onChange={handleFormChange}
+                          required
+                        >
+                          <option value="">Please select</option>
+                          <option value="house">House with yard</option>
+                          <option value="house_no_yard">House without yard</option>
+                          <option value="apartment">Apartment</option>
+                          <option value="condo">Condominium</option>
+                          <option value="other">Other</option>
+                        </select>
+                      </div>
+                    </div>
+                    
+                    <div className="pet-form-group full-width">
+                      <label htmlFor="reason">Why do you want to adopt {selectedPet.name}?</label>
+                      <textarea 
+                        id="reason" 
+                        name="reason" 
+                        value={adoptionFormData.reason}
+                        onChange={handleFormChange}
+                        rows="4" 
+                        required 
+                      ></textarea>
+                    </div>
+                    
+                    <div className="pet-form-actions">
+                      <button 
+                        type="button" 
+                        className="pet-form-cancel"
+                        onClick={() => setSelectedPet(null)}
+                      >
+                        Cancel
+                      </button>
+                      <button type="submit" className="pet-form-submit">
+                        Submit Adoption Request
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         )}
-      </PetsPage>
-    </>
+        
+        {/* Success message after adoption request */}
+        {showAdoptionSuccess && adoptedPet && (
+          <div className="pets-adoption-success" id="adoption-success">
+            <div className="pets-success-inner">
+              <div className="pets-success-icon">✓</div>
+              <h3 className="pets-success-title">Adoption Request Submitted!</h3>
+              <p className="pets-success-text">Thank you for your interest in adopting {adoptedPet.name}!</p>
+              <p className="pets-success-text">We've received your request and will review it shortly. Our team will contact you within 1-2 business days to discuss next steps.</p>
+              <div className="pets-success-actions">
+                <button 
+                  className="pets-primary-button" 
+                  onClick={() => setShowAdoptionSuccess(false)}
+                >
+                  Continue Browsing
+                </button>
+                <button 
+                  className="pets-secondary-button"
+                  onClick={handleBackToPetTypes}
+                >
+                  Back to Pet Types
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Main Available Pets page with all sections
+  return (
+    <motion.div 
+      className="pets-page-container"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Decorative paw prints in the background */}
+      {pawsArray.map((paw) => (
+        <motion.img
+          key={paw.id}
+          src={pawImage}
+          alt=""
+          className="pets-paw-print"
+          style={{
+            left: `${paw.x}%`,
+            top: `${paw.y}%`,
+            width: `${paw.size}px`,
+            height: `${paw.size}px`,
+            opacity: paw.opacity,
+            transform: `rotate(${paw.rotation}deg)`,
+            position: 'absolute',
+            zIndex: 0,
+          }}
+        />
+      ))}
+
+      {/* SECTION 1: Header */}
+      <section className="pets-header-section">
+        <motion.div 
+          className="pets-header-content"
+          initial={{ y: 50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.7, delay: 0.1 }}
+        >
+          <h1 className="pets-page-title">Find Your Perfect Companion</h1>
+          <p className="pets-page-subtitle">
+            Browse our available pets and start your journey to giving a loving animal their forever home. 
+            Each pet has been rescued, cared for, and is ready to become part of your family.
+          </p>
+        </motion.div>
+      </section>
+
+      {/* SECTION 2: Pet Types */}
+      <section className="pets-types-section">
+        <div className="pets-section-container">
+          <motion.h2 
+            className="pets-section-title"
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            Choose a Pet Type
+          </motion.h2>
+          <motion.p 
+            className="pets-section-subtitle"
+            initial={{ y: 30, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            Explore our different categories of animals waiting for adoption
+          </motion.p>
+          
+          <motion.div 
+            className="pets-types-grid"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
+            {petTypes.map((petType, index) => (
+              <motion.div 
+                className="pets-type-card"
+                key={petType.type}
+                whileHover={{ 
+                  scale: 1.03, 
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+                  y: -5 
+                }}
+                transition={{ duration: 0.3 }}
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+              >
+                <div className="pets-type-image-container">
+                  <img src={petType.image} alt={petType.type} className="pets-type-image" />
+                  <div className="pets-type-icon">{petType.icon}</div>
+                </div>
+                <div className="pets-type-content">
+                  <h3>{petType.type}</h3>
+                  <p>{petType.description}</p>
+                  <button 
+                    className="pets-view-button"
+                    onClick={() => handleSelectPetType(petType.type)}
+                  >
+                    View {petType.type}
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* SECTION 3: Adoption Steps */}
+      <section className="pets-adoption-steps">
+        <div className="pets-section-container">
+          <motion.h2 
+            className="pets-section-title"
+            initial={{ y: 30, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            Adoption Process
+          </motion.h2>
+          <motion.p 
+            className="pets-section-subtitle"
+            initial={{ y: 30, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            Four simple steps to welcome a new pet into your family
+          </motion.p>
+
+          <div className="pets-steps-container">
+            {adoptionSteps.map((step, index) => (
+              <motion.div 
+                className="pets-step-card"
+                key={step.title}
+                initial={{ y: 50, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+              >
+                <div className="pets-step-number">{step.step}</div>
+                <div className="pets-step-icon">{step.icon}</div>
+                <h3 className="pets-step-title">{step.title}</h3>
+                <p className="pets-step-description">{step.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION 4: Why Choose Us */}
+      <section className="pets-why-choose-us">
+        <div className="pets-section-container">
+          <motion.h2 
+            className="pets-section-title"
+            initial={{ y: 30, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            Why Choose Our Adoption Service?
+          </motion.h2>
+          <motion.p 
+            className="pets-section-subtitle"
+            initial={{ y: 30, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            The benefits of adopting through our platform
+          </motion.p>
+
+          <div className="pets-benefits-grid">
+            {benefits.map((benefit, index) => (
+              <motion.div 
+                className="pets-benefit-card"
+                key={benefit.title}
+                initial={{ y: 50, opacity: 0 }}
+                whileInView={{ y: 0, opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+              >
+                <div className="pets-benefit-check">✓</div>
+                <h3 className="pets-benefit-title">{benefit.title}</h3>
+                <p className="pets-benefit-description">{benefit.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Us CTA Section */}
+      <section className="pets-contact-section">
+        <div className="pets-section-container">
+          <motion.div 
+            className="pets-contact-content"
+            initial={{ y: 50, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <h2>Have Questions About Adoption?</h2>
+            <p>Our team is ready to assist you with the adoption process or answer any questions you might have about our pets.</p>
+            <button 
+              className="pets-contact-button"
+              onClick={() => navigate('/contact')}
+            >
+              Contact Us
+            </button>
+          </motion.div>
+        </div>
+      </section>
+    </motion.div>
   );
 };
+
 export default AvailablePets;
