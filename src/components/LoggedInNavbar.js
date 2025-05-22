@@ -1,16 +1,26 @@
 // src/components/LoggedInNavbar.js
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 
 const LoggedInNavbar = () => {
   const navigate = useNavigate();
+  const [userRole, setUserRole] = useState('');
+  
+  // Get the user role from localStorage when component mounts
+  useEffect(() => {
+    const role = localStorage.getItem('userRole') || 'user';
+    setUserRole(role);
+  }, []);
   
   const handleLogout = (e) => {
     e.preventDefault();
     
-    // Remove the isLoggedIn flag from localStorage
+    // Remove all user data from localStorage
     localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userRole');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('username');
     
     // Redirect to home page
     navigate('/');
@@ -41,11 +51,21 @@ const LoggedInNavbar = () => {
               Inbox
             </Link>
           </li>
-          <li className="nav-item">
-            <Link to="/profile" className="nav-links">
-              My Profile
-            </Link>
-          </li>
+          
+          {userRole === 'shelter' ? (
+            <li className="nav-item">
+              <Link to="/shelter-dashboard" className="nav-links shelter-dashboard-link">
+                Shelter Dashboard
+              </Link>
+            </li>
+          ) : (
+            <li className="nav-item">
+              <Link to="/profile" className="nav-links">
+                My Profile
+              </Link>
+            </li>
+          )}
+          
           <li className="nav-item">
             <a href="/" className="nav-links" onClick={handleLogout}>
               Log Out

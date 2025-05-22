@@ -133,6 +133,24 @@
   }
 }
 
+/* Special styling for Shelter Dashboard link */
+.shelter-dashboard-link {
+  background-color: #4B3F6E;
+  color: white !important;
+  padding: 8px 15px !important;
+  border-radius: 20px;
+  transition: all 0.3s ease !important;
+  font-weight: 600 !important;
+  margin-left: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+}
+
+.shelter-dashboard-link:hover {
+  background-color: #362D52;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
 @media screen and (max-width: 768px) {
   .navbar {
     height: 60px;
