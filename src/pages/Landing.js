@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import './Landing.css';
-import heroImage from '../media/LandingPage/parallaxBG.jpg';
 import petid from '../media/LandingPage/petid.png';
 import petsearchicon from '../media/LandingPage/petsearchicon.png';
-import pets from '../media/LandingPage/pets.png';
 import requestdoc from '../media/LandingPage/requestdoc.png';
 import request from '../media/LandingPage/request.png';
 import petshop from '../media/LandingPage/petshop.png';
@@ -33,8 +31,8 @@ const Landing = () => {
     };
   };
 
-  // Function to add a new paw print
-  const addPaw = () => {
+  // Function to add a new paw print - memoize with useCallback
+  const addPaw = useCallback(() => {
     if (!shouldAnimate) return;
 
     const newPaw = getRandomPosition();
@@ -44,7 +42,7 @@ const Landing = () => {
     setTimeout(() => {
       setPawsArray(prevPaws => prevPaws.filter(paw => paw.id !== newPaw.id));
     }, (newPaw.duration + newPaw.delay) * 1000);
-  };
+  }, [shouldAnimate]);
 
   // Setup paw creation interval
   useEffect(() => {
@@ -68,7 +66,7 @@ const Landing = () => {
 
     // Clean up interval on unmount
     return () => clearInterval(interval);
-  }, [shouldAnimate]);
+  }, [addPaw]); // Add addPaw to the dependency array
 
   // Features data for both user and shelter sides
   const features = {
