@@ -2,7 +2,7 @@
   "name": "pet_adoption_platform",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://suee18.github.io/petAdoption_SWPM.githhub.io",
+  "homepage": "https://suee18.github.io/petAdoption_SWPM.githhub.io/",
   "dependencies": {
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
